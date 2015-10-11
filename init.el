@@ -1,26 +1,25 @@
-(package-initialize)
-
-(add-to-list 'load-path "~/.emacs.d/use-package")
-(eval-when-compile
-  (require 'use-package))
+(setq load-prefer-newer t)
 
 ;; ------------------
 ;; Package management
 ;; ------------------
 
-;; Please don't load outdated byte code
-(setq load-prefer-newer t)
-
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-
 (package-initialize)
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
     (package-install 'use-package))
+
+;; --------
+;; Requires
+;; --------
+
+(eval-when-compile
+    (require 'use-package))
 
 ;; --------
 ;; Settings
