@@ -14,10 +14,6 @@
   (package-refresh-contents)
     (package-install 'use-package))
 
-;; --------
-;; Requires
-;; --------
-
 (eval-when-compile
     (require 'use-package))
 
@@ -25,15 +21,18 @@
 ;; Settings
 ;; --------
 
-;; Standard stuff
 (line-number-mode)
 (column-number-mode)
+(setq inhibit-splash-screen t)
+(savehist-mode t)
 
 ;; ------------------
 ;; Configure Packages
 ;; ------------------
 
 ;; Evil - VIM emulation layer for emacs
+(setq evil-want-C-i-jump t)
+(setq evil-want-C-u-scroll t)
 (use-package evil
   :ensure t
   :init
