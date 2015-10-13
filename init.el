@@ -50,3 +50,11 @@
 ;; Magit - A vim porcelain
 (use-package magit
   :ensure t)
+
+;; Company - Auto-completion
+(use-package company
+  :ensure t
+  :init
+  (global-company-mode)
+  (setq company-selection-wrap-around t)
+  (setq company-show-numbers t))
