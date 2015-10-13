@@ -30,6 +30,12 @@
 ;; Configure Packages
 ;; ------------------
 
+;; Key-chord - Key stroke combos
+(use-package key-chord
+  :ensure t
+  :init
+  (key-chord-mode t))
+
 ;; Evil - VIM emulation layer for emacs
 (setq evil-want-C-i-jump t)
 (setq evil-want-C-u-scroll t)
@@ -37,11 +43,9 @@
   :ensure t
   :init
   (evil-mode t)
-  (defun insert-jay ()
-    (interactive)
-    (insert "j"))
-  (define-key evil-insert-state-map (kbd "jk") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "jj") 'insert-jay))
+  ;; The fastest way to leave insert mode:
+  (dolist (x '("jk" "jK" "JK" "Jk" "kj" "kJ" "KJ" "Kj"))
+    (key-chord-define evil-insert-state-map x 'evil-normal-state)))
 
 ;; Magit - A vim porcelain
 (use-package magit
