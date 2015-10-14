@@ -72,6 +72,7 @@
   (setq company-selection-wrap-around t)
   (setq company-show-numbers t))
 
+;; Spaceline - A mode line
 (use-package spaceline
   :ensure t
   :init
