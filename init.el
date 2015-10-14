@@ -33,7 +33,11 @@
 (use-package atom-one-dark-theme
   :ensure t
   :init
-  (load-theme 'atom-one-dark t))
+  (load-theme
+   (if (display-graphic-p)
+       'atom-one-dark
+     'tsdh-dark)
+   t))
 
 ;; ------------------
 ;; Configure Packages
