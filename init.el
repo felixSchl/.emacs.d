@@ -27,6 +27,15 @@
 (savehist-mode t)
 
 ;; ------------------
+;; Theme
+;; ------------------
+
+(use-package atom-one-dark-theme
+  :ensure t
+  :init
+  (load-theme 'atom-one-dark t))
+
+;; ------------------
 ;; Configure Packages
 ;; ------------------
 
