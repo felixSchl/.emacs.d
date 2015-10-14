@@ -71,3 +71,10 @@
   (global-company-mode)
   (setq company-selection-wrap-around t)
   (setq company-show-numbers t))
+
+(use-package spaceline
+  :ensure t
+  :init
+  (require 'spaceline-config)
+  (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+  (spaceline-spacemacs-theme))
