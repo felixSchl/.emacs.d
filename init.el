@@ -68,7 +68,9 @@
   (evil-mode t)
   ;; The fastest way to leave insert mode:
   (dolist (x '("jk" "jK" "JK" "Jk" "kj" "kJ" "KJ" "Kj"))
-    (key-chord-define evil-insert-state-map x 'evil-normal-state)))
+    (key-chord-define evil-insert-state-map x 'evil-normal-state))
+  ;; Mimic fugitive bindings
+  (evil-ex-define-cmd "Gst[atus]" 'magit-status))
 
 ;; Magit - A vim porcelain
 (use-package magit
