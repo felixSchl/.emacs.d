@@ -92,10 +92,12 @@
   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
   (spaceline-spacemacs-theme))
 
+;; Diff-hl - Highlight changed lines
 (use-package diff-hl
   :ensure t
   :init
   (global-diff-hl-mode)
+  ;; Highlight changes on-the-fly
   (diff-hl-flydiff-mode)
   (unless (display-graphic-p)
     (setq diff-hl-side 'left)
