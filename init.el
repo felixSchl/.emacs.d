@@ -6,7 +6,9 @@
 
 (require 'package)
 (setq package-enable-at-startup nil)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "https://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 
 ;; Bootstrap `use-package'
