@@ -31,6 +31,11 @@
 ;; Remap command to option on Apple Mac
 (setq mac-command-modifier 'super)
 (setq mac-option-modifier 'meta)
+
+(defun my-prog-mode-hook ()
+  (linum-mode t))
+(add-hook 'prog-mode-hook 'my-prog-mode-hook)
+
 ;; ------------------
 ;; Theme
 ;; ------------------
