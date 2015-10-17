@@ -92,8 +92,11 @@
   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
   (spaceline-spacemacs-theme))
 
-;; Paredit-compat mode
-(use-package evil-paredit
+(use-package diff-hl
   :ensure t
   :init
-  (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode))
+  (global-diff-hl-mode)
+  (diff-hl-flydiff-mode)
+  (unless (display-graphic-p)
+    (setq diff-hl-side 'left)
+    (diff-hl-margin-mode)))
