@@ -28,6 +28,9 @@
 (setq inhibit-splash-screen t)
 (savehist-mode t)
 
+;; Remap command to option on Apple Mac
+(setq mac-command-modifier 'super)
+(setq mac-option-modifier 'meta)
 ;; ------------------
 ;; Theme
 ;; ------------------
