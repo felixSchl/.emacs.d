@@ -72,6 +72,12 @@
   ;; Mimic fugitive bindings
   (evil-ex-define-cmd "Gst[atus]" 'magit-status))
 
+;; Evil commentary - Toggle comments
+(use-package evil-commentary
+  :ensure t
+  :init
+  (evil-commentary-mode))
+
 ;; Magit - A vim porcelain
 (use-package magit
   :ensure t)
