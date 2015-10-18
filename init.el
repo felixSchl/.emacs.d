@@ -115,3 +115,23 @@
   (unless (display-graphic-p)
     (setq diff-hl-side 'left)
     (diff-hl-margin-mode)))
+
+;; fci-mode - Fill column indicator
+(use-package fill-column-indicator
+  :ensure t
+  :init
+  (setq-default fci-rule-column 80)
+  (setq fci-handle-truncate-lines nil)
+
+  ;; Globally enable fci-mode
+  (define-globalized-minor-mode
+    global-fci-mode fci-mode (lambda () (fci-mode 1)))
+  (global-fci-mode t)
+
+  ;; Fix weird rendering
+  (defun auto-fci-mode (&optional unused)
+    (if (> (window-width) fci-rule-column)
+        (fci-mode 1)
+      (fci-mode 0)))
+  (add-hook 'after-change-major-mode-hook 'auto-fci-mode)
+  (add-hook 'window-configuration-change-hook 'auto-fci-mode))
