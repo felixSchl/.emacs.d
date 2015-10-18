@@ -66,9 +66,16 @@
   :ensure t
   :init
   (evil-mode t)
+
+  ;; "Hybrid" editing style:
+  ;; (this allows for keymacs key-bindings in insert-mode)
+  (setcdr evil-insert-state-map nil)
+  (define-key evil-insert-state-map [escape] 'evil-normal-state)
+
   ;; The fastest way to leave insert mode:
   (dolist (x '("jk" "jK" "JK" "Jk" "kj" "kJ" "KJ" "Kj"))
     (key-chord-define evil-insert-state-map x 'evil-normal-state))
+
   ;; Mimic fugitive bindings
   (evil-ex-define-cmd "Gst[atus]" 'magit-status))
 
