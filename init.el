@@ -28,6 +28,7 @@
 (setq inhibit-splash-screen t)
 (savehist-mode t)
 (set-fill-column 80)
+(setq gc-cons-threshold 20000000)
 
 (require 'whitespace)
 (setq whitespace-line-column 80)
@@ -127,20 +128,32 @@
   :ensure t
   :init
   (column-marker-1 80))
+
+;; Helm - incremental completion framework
+(use-package helm
   :ensure t
   :init
-  (setq-default fci-rule-column 80)
-  (setq fci-handle-truncate-lines nil)
+  (setq helm-mode-fuzzy-match t)
+  (setq helm-completion-in-region-fuzzy-match t)
+  (helm-mode t)
+  (global-set-key (kbd "M-x") 'helm-M-x))
 
-  ;; Globally enable fci-mode
-  (define-globalized-minor-mode
-    global-fci-mode fci-mode (lambda () (fci-mode 1)))
-  (global-fci-mode t)
+;; Projectile - Project interaction library
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-global-mode t))
 
-  ;; Fix weird rendering
-  (defun auto-fci-mode (&optional unused)
-    (if (> (window-width) fci-rule-column)
-        (fci-mode 1)
-      (fci-mode 0)))
-  (add-hook 'after-change-major-mode-hook 'auto-fci-mode)
-  (add-hook 'window-configuration-change-hook 'auto-fci-mode))
+;; Flx-ido - Proper fuzzy matching for ido-mode
+(use-package flx-ido
+  :ensure t
+  :init
+  (flx-ido-mode t)
+  (setq ido-enable-flex-matching t)
+  (setq ido-use-faces nil))
+
+;; Helm-flx - Proper fuzzy matching for helm
+(use-package helm-flx
+  :ensure t
+  :init
+  (helm-flx-mode t))
