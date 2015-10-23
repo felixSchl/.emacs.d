@@ -27,6 +27,7 @@
 (column-number-mode)
 (setq inhibit-splash-screen t)
 (savehist-mode t)
+(set-fill-column 80)
 
 ;; Remap command to option on Apple Mac
 (setq mac-command-modifier 'super)
