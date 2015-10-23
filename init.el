@@ -29,6 +29,11 @@
 (savehist-mode t)
 (set-fill-column 80)
 
+(require 'whitespace)
+(setq whitespace-line-column 80)
+(setq whitespace-style '(face lines-tail))
+(whitespace-mode t)
+
 ;; Remap command to option on Apple Mac
 (setq mac-command-modifier 'super)
 (setq mac-option-modifier 'meta)
@@ -117,8 +122,11 @@
     (setq diff-hl-side 'left)
     (diff-hl-margin-mode)))
 
-;; fci-mode - Fill column indicator
-(use-package fill-column-indicator
+;; Column-marker - Mark the 80ths column
+(use-package column-marker
+  :ensure t
+  :init
+  (column-marker-1 80))
   :ensure t
   :init
   (setq-default fci-rule-column 80)
