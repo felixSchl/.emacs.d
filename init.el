@@ -29,6 +29,7 @@
 (savehist-mode t)
 (set-fill-column 80)
 (setq gc-cons-threshold 20000000)
+(setq system-uses-terminfo nil)
 
 (require 'whitespace)
 (setq whitespace-line-column 80)
