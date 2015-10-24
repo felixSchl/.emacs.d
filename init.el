@@ -90,6 +90,9 @@
   (setcdr evil-insert-state-map nil)
   (define-key evil-insert-state-map [escape] 'evil-normal-state)
 
+  ;; Do not use vim mappings in term-mode
+  (evil-set-initial-state 'term-mode 'emacs)
+
   ;; The fastest way to leave insert mode:
   (dolist (x '("jk" "jK" "JK" "Jk" "kj" "kJ" "KJ" "Kj"))
     (key-chord-define evil-insert-state-map x 'evil-normal-state))
