@@ -44,9 +44,19 @@
   (linum-mode t))
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 
-;; ------------------
+;; -----------
+;; Keymappings
+;; -----------
+
+(global-set-key (kbd "<f2>")
+		(lambda
+		  ()
+		  (interactive)
+		  (find-file "~/.emacs.d/init.el")))
+
+;; -----
 ;; Theme
-;; ------------------
+;; -----
 
 (use-package atom-one-dark-theme
   :ensure t
