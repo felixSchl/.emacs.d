@@ -114,9 +114,16 @@
 (use-package company
   :ensure t
   :init
-  (global-company-mode)
   (setq company-selection-wrap-around t)
-  (setq company-show-numbers t))
+  (setq company-show-numbers t)
+  (setq company-minimum-prefix-length 2)
+
+  :config
+  (global-company-mode))
+
+  ;; Move `company-files` to the front
+  (setq company-backends (remove 'company-files company-backends))
+  (add-to-list 'company-backends 'company-files)
 
 ;; Spaceline - A mode line
 (use-package spaceline
@@ -163,12 +170,49 @@
 (use-package flx-ido
   :ensure t
   :init
-  (flx-ido-mode t)
   (setq ido-enable-flex-matching t)
-  (setq ido-use-faces nil))
+  (setq ido-use-faces nil)
+  :config
+  (flx-ido-mode t))
 
 ;; Helm-flx - Proper fuzzy matching for helm
 (use-package helm-flx
   :ensure t
   :config
   (helm-flx-mode t))
+
+;; Ido-vertical - vertical ido completion
+(use-package ido-vertical-mode
+  :ensure t
+  :init
+  (setq ido-vertical-define-keys 'C-n-and-C-p-only)
+  :config
+  (ido-vertical-mode t))
+
+;; ----------------------------
+;; Language / Framework support
+;; ----------------------------
+
+;; Pony-mode - Django-mode for emacs
+;; (use-package pony
+;';   :ensure t
+;;   :init
+
+;; Anaconda mode - Python mode
+(use-package anaconda-mode
+  :ensure t
+  :config
+  (add-hook 'python-mode-hook 'anaconda-mode))
+
+;; Company-anaconda - Company completion backend
+(use-package company-anaconda
+  :ensure t
+  :config
+       (add-hook 'python-mode-hook
+		 (lambda ()
+		   (interactive)
+		   (set (make-local-variable 'company-backends)
+			'(company-files
+			  (company-dabbrev
+			   company-dabbrev-code
+			   company-anaconda))))))
