@@ -74,7 +74,7 @@
 ;; Key-chord - Key stroke combos
 (use-package key-chord
   :ensure t
-  :init
+  :config
   (key-chord-mode t))
 
 ;; Evil - VIM emulation layer for emacs
@@ -82,7 +82,7 @@
 (setq evil-want-C-u-scroll t)
 (use-package evil
   :ensure t
-  :init
+  :config
   (evil-mode t)
 
   ;; "Hybrid" editing style:
@@ -103,7 +103,7 @@
 ;; Evil commentary - Toggle comments
 (use-package evil-commentary
   :ensure t
-  :init
+  :config
   (evil-commentary-mode))
 
 ;; Magit - A vim porcelain
@@ -124,12 +124,13 @@
   :init
   (require 'spaceline-config)
   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+  :config
   (spaceline-spacemacs-theme))
 
 ;; Diff-hl - Highlight changed lines
 (use-package diff-hl
   :ensure t
-  :init
+  :config
   (global-diff-hl-mode)
   ;; Highlight changes on-the-fly
   (diff-hl-flydiff-mode)
@@ -140,13 +141,13 @@
 ;; Column-marker - Mark the 80ths column
 (use-package column-marker
   :ensure t
-  :init
+  :config
   (column-marker-1 80))
 
 ;; Helm - incremental completion framework
 (use-package helm
   :ensure t
-  :init
+  :config
   (setq helm-mode-fuzzy-match t)
   (setq helm-completion-in-region-fuzzy-match t)
   (helm-mode t)
@@ -155,7 +156,7 @@
 ;; Projectile - Project interaction library
 (use-package projectile
   :ensure t
-  :init
+  :config
   (projectile-global-mode t))
 
 ;; Flx-ido - Proper fuzzy matching for ido-mode
@@ -169,5 +170,5 @@
 ;; Helm-flx - Proper fuzzy matching for helm
 (use-package helm-flx
   :ensure t
-  :init
+  :config
   (helm-flx-mode t))
