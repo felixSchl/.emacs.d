@@ -31,6 +31,11 @@
 (setq gc-cons-threshold 20000000)
 (setq system-uses-terminfo nil)
 
+;; Tabs/Spaces
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq-default tab-stop-list (number-sequence 4 120 4))
+
 (require 'whitespace)
 (setq whitespace-line-column 80)
 (setq whitespace-style '(face lines-tail))
