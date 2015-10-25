@@ -14,10 +14,10 @@
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
-    (package-install 'use-package))
+  (package-install 'use-package))
 
 (eval-when-compile
-    (require 'use-package))
+  (require 'use-package))
 
 ;; --------
 ;; Settings
@@ -54,10 +54,10 @@
 ;; -----------
 
 (global-set-key (kbd "<f2>")
-		(lambda
-		  ()
-		  (interactive)
-		  (find-file "~/.emacs.d/init.el")))
+                (lambda
+                  ()
+                  (interactive)
+                  (find-file "~/.emacs.d/init.el")))
 
 ;; -----
 ;; Theme
@@ -126,9 +126,9 @@
   :config
   (global-company-mode))
 
-  ;; Move `company-files` to the front
-  (setq company-backends (remove 'company-files company-backends))
-  (add-to-list 'company-backends 'company-files)
+;; Move `company-files` to the front
+(setq company-backends (remove 'company-files company-backends))
+(add-to-list 'company-backends 'company-files)
 
 ;; Spaceline - A mode line
 (use-package spaceline
@@ -213,11 +213,11 @@
 (use-package company-anaconda
   :ensure t
   :config
-       (add-hook 'python-mode-hook
-		 (lambda ()
-		   (interactive)
-		   (set (make-local-variable 'company-backends)
-			'(company-files
-			  (company-dabbrev
-			   company-dabbrev-code
-			   company-anaconda))))))
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (interactive)
+              (set (make-local-variable 'company-backends)
+                   '(company-files
+                     (company-dabbrev
+                      company-dabbrev-code
+                      company-anaconda))))))
