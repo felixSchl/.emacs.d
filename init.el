@@ -46,6 +46,7 @@
 (setq mac-option-modifier 'meta)
 
 (defun my-prog-mode-hook ()
+  (show-paren-mode t)
   (linum-mode t))
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 
