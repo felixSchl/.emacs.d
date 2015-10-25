@@ -103,6 +103,14 @@
   (dolist (x '("jk" "jK" "JK" "Jk" "kj" "kJ" "KJ" "Kj"))
     (key-chord-define evil-insert-state-map x 'evil-normal-state))
 
+  ;; Quickly comment a line using `evil-commentary`
+  (defun comment-and-move (count)
+  (interactive "p")
+  (let ((current-prefix-arg count))
+    (call-interactively 'evil-commentary-line))
+  (evil-next-line count))
+  (evil-global-set-key 'normal "`" 'comment-and-move)
+
   ;; Mimic fugitive bindings
   (evil-ex-define-cmd "Gst[atus]" 'magit-status))
 
