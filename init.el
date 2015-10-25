@@ -114,7 +114,10 @@
 
 ;; Magit - A vim porcelain
 (use-package magit
-  :ensure t)
+  :ensure t
+  :init
+  (setq magit-diff-paint-whitespace t)
+  (setq magit-diff-highlight-trailing t))
 
 ;; Company - Auto-completion
 (use-package company
