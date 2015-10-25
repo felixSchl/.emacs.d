@@ -38,8 +38,13 @@
 
 (require 'whitespace)
 (setq whitespace-line-column 80)
-(setq whitespace-style '(face lines-tail))
-(whitespace-mode t)
+(setq whitespace-style
+      '(face
+        lines-tail
+        tabs
+        trailing
+        tab-mark empty))
+(global-whitespace-mode t)
 
 ;; Remap command to option on Apple Mac
 (setq mac-command-modifier 'super)
@@ -206,15 +211,6 @@
   (setq ido-vertical-define-keys 'C-n-and-C-p-only)
   :config
   (ido-vertical-mode t))
-
-;; highlight-chars
-(use-package highlight-chars
-  :ensure t
-  :init
-  (defun highlight-ws ()
-    (hc-highlight-tabs)
-    (hc-highlight-trailing-whitespace))
-  (add-hook 'prog-mode-hook 'highlight-ws))
 
 ;; Whitespace butler - clean up whitespace
 (use-package ws-butler
