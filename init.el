@@ -175,7 +175,8 @@
   (setq helm-mode-fuzzy-match t)
   (setq helm-completion-in-region-fuzzy-match t)
   (helm-mode t)
-  (global-set-key (kbd "M-x") 'helm-M-x))
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "C-c f r") 'helm-recentf))
 
 ;; Projectile - Project interaction library
 (use-package projectile
