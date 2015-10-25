@@ -194,14 +194,24 @@
   :config
   (ido-vertical-mode t))
 
+;; highlight-chars
+(use-package highlight-chars
+  :ensure t
+  :init
+  (defun highlight-ws ()
+    (hc-highlight-tabs)
+    (hc-highlight-trailing-whitespace))
+  (add-hook 'prog-mode-hook 'highlight-ws))
+
+;; Whitespace butler - clean up whitespace
+(use-package ws-butler
+  :ensure t
+  :config
+  (ws-butler-global-mode t))
+
 ;; ----------------------------
 ;; Language / Framework support
 ;; ----------------------------
-
-;; Pony-mode - Django-mode for emacs
-;; (use-package pony
-;';   :ensure t
-;;   :init
 
 ;; Anaconda mode - Python mode
 (use-package anaconda-mode
