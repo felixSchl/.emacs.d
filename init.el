@@ -220,6 +220,12 @@
   :config
   (ws-butler-global-mode t))
 
+;; Evil-visualstar - Start search with # and * in visual selection
+(use-package evil-visualstar
+  :ensure t
+  :config
+  (global-evil-visualstar-mode))
+
 ;; ----------------------------
 ;; Language / Framework support
 ;; ----------------------------
