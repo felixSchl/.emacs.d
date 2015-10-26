@@ -104,6 +104,7 @@
 
   ;; Do not use vim mappings in term-mode
   (evil-set-initial-state 'term-mode 'emacs)
+  (evil-set-initial-state 'git-rebase-mode 'emacs)
 
   ;; The fastest way to leave insert mode:
   (dolist (x '("jk" "jK" "JK" "Jk" "kj" "kJ" "KJ" "Kj"))
