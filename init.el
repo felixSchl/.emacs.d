@@ -52,6 +52,7 @@
 
 (defun my-prog-mode-hook ()
   (show-paren-mode t)
+  (set-fill-column 80)
   (linum-mode t))
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 
