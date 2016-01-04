@@ -1,8 +1,8 @@
 (setq load-prefer-newer t)
 
-;; -------------------------------------------------------------------------
-;; Package management ------------------------------------------------------
-;; -------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
+;; Package management ----------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -19,9 +19,9 @@
 (eval-when-compile
   (require 'use-package))
 
-;; -------------------------------------------------------------------------
-;; Settings ----------------------------------------------------------------
-;; -------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
+;; Settings --------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 (require 'diminish)
 (line-number-mode)
@@ -46,6 +46,7 @@
         trailing
         tab-mark empty))
 (global-whitespace-mode t)
+(diminish 'whitespace-mode)
 
 ;; Remap command to option on Apple Mac
 (setq mac-command-modifier 'super)
@@ -57,9 +58,9 @@
   (linum-mode t))
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 
-;; -----------
-;; Keymappings
-;; -----------
+;; -----------------------------------------------------------------------------
+;; Keymappings -----------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 (global-set-key (kbd "<f2>")
                 (lambda
@@ -67,9 +68,9 @@
                   (interactive)
                   (find-file "~/.emacs.d/init.el")))
 
-;; -----
-;; Theme
-;; -----
+;; -----------------------------------------------------------------------------
+;; Theme -----------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 (use-package atom-one-dark-theme
   :ensure t
@@ -80,9 +81,9 @@
      'tsdh-dark)
    t))
 
-;; ------------------
-;; Configure Packages
-;; ------------------
+;; -----------------------------------------------------------------------------
+;; Configure Packages ----------------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 ;; Key-chord - Key stroke combos
 (use-package key-chord
@@ -97,6 +98,7 @@
   :ensure t
   :config
   (evil-mode t)
+  (diminish 'undo-tree-mode)
 
   ;; "Hybrid" editing style:
   ;; (this allows for keymacs key-bindings in insert-mode)
@@ -126,7 +128,8 @@
 (use-package evil-commentary
   :ensure t
   :config
-  (evil-commentary-mode))
+  (evil-commentary-mode)
+  (diminish 'evil-commentary-mode))
 
 ;; Magit - A vim porcelain
 (use-package magit
@@ -144,7 +147,8 @@
   (setq company-minimum-prefix-length 2)
 
   :config
-  (global-company-mode))
+  (global-company-mode)
+  (diminish 'company-mode))
 
 ;; Move `company-files` to the front
 (setq company-backends (remove 'company-files company-backends))
@@ -183,6 +187,7 @@
   (setq helm-mode-fuzzy-match t)
   (setq helm-completion-in-region-fuzzy-match t)
   (helm-mode t)
+  (diminish 'helm-mode)
   (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-c f r") 'helm-recentf))
 
@@ -190,7 +195,8 @@
 (use-package projectile
   :ensure t
   :config
-  (projectile-global-mode t))
+  (projectile-global-mode t)
+  (diminish 'projectile-mode))
 
 ;; Flx-ido - Proper fuzzy matching for ido-mode
 (use-package flx-ido
@@ -227,9 +233,9 @@
   :config
   (global-evil-visualstar-mode))
 
-;; ----------------------------
-;; Language / Framework support
-;; ----------------------------
+;; -----------------------------------------------------------------------------
+;; Language / Framework support-------------------------------------------------
+;; -----------------------------------------------------------------------------
 
 ;; Anaconda mode - Python mode
 (use-package anaconda-mode
