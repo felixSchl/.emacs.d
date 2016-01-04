@@ -92,10 +92,11 @@
   (key-chord-mode t))
 
 ;; Evil - VIM emulation layer for emacs
-(setq evil-want-C-i-jump t)
-(setq evil-want-C-u-scroll t)
 (use-package evil
   :ensure t
+  :init
+   (setq evil-want-C-i-jump t)
+   (setq evil-want-C-u-scroll t)
   :config
   (evil-mode t)
   (diminish 'undo-tree-mode)
