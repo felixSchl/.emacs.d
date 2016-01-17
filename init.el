@@ -7,6 +7,7 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("emacs-pe" . "https://emacs-pe.github.io/packages/")
                          ("marmalade" . "https://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
@@ -31,6 +32,8 @@
 (set-fill-column 80)
 (setq gc-cons-threshold 20000000)
 (setq system-uses-terminfo nil)
+(set-default 'truncate-lines t)
+(hl-line-mode t)
 
 ;; Tabs/Spaces
 (setq-default indent-tabs-mode nil)
@@ -55,8 +58,27 @@
 (defun my-prog-mode-hook ()
   (show-paren-mode t)
   (set-fill-column 80)
-  (linum-mode t))
+  (linum-mode t)
+  (fci-mode t)
+  (hl-line-mode t))
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
+
+
+;; Fix fci-mode when used in conjunction with company-mode.
+;; https://github.com/company-mode/company-mode/issues/180#issuecomment-55047120
+(defvar-local company-fci-mode-on-p nil)
+
+(defun company-turn-off-fci (&rest ignore)
+  (when (boundp 'fci-mode)
+    (setq company-fci-mode-on-p fci-mode)
+    (when fci-mode (fci-mode -1))))
+
+(defun company-maybe-turn-on-fci (&rest ignore)
+  (when company-fci-mode-on-p (fci-mode 1)))
+
+(add-hook 'company-completion-started-hook 'company-turn-off-fci)
+(add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
+(add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)
 
 ;; -----------------------------------------------------------------------------
 ;; Keymappings -----------------------------------------------------------------
@@ -84,6 +106,10 @@
 ;; -----------------------------------------------------------------------------
 ;; Configure Packages ----------------------------------------------------------
 ;; -----------------------------------------------------------------------------
+
+;; Smooth-Scrolling - Retain context during scrolling
+(use-package smooth-scrolling
+  :ensure t)
 
 ;; Flycheck - on-the-fly syntax checking
 (use-package flycheck
@@ -243,9 +269,33 @@
   :config
   (global-evil-visualstar-mode))
 
+;; Markdown
+(use-package markdown-mode
+  :ensure t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.text\\'"     . gfm-mode))
+  (add-to-list 'auto-mode-alist '("\\.markdown\\'" . gfm-mode))
+  (add-to-list 'auto-mode-alist '("\\.md\\'"       . gfm-mode))
+  :config
+  (add-hook 'gfm-mode-hook
+            (lambda ()
+              (interactive)
+              (fci-mode t)
+              (set-fill-column 80))))
+
 ;; -----------------------------------------------------------------------------
 ;; Language / Framework support-------------------------------------------------
 ;; -----------------------------------------------------------------------------
+
+;; Purescript
+(use-package purescript-mode
+  :load-path "~/.emacs.d/purescript-mode")
+
+;; Setup Flycheck by PureScript projects
+(use-package flycheck-purescript
+  :ensure t
+  :pin emacs-pe
+  :init (add-hook 'purescript-mode-hook #'flycheck-purescript-setup))
 
 ;; Anaconda mode - Python mode
 (use-package anaconda-mode
