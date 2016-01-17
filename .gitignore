@@ -1,0 +1,10 @@
+.cache/
+**/*.sw[a-z]
+**/*.un~
+**/*~
+recentf
+elpa/
+anaconda-mode/
+auto-save-list/
+history
+projectile-bookmarks.eld
