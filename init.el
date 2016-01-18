@@ -227,6 +227,8 @@
   (diminish 'helm-mode)
   (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-c f r") 'helm-recentf))
+(use-package helm-ls-git
+  :ensure t)
 
 ;; Projectile - Project interaction library
 (use-package projectile
