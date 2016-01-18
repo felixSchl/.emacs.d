@@ -156,6 +156,7 @@
     (call-interactively 'evil-commentary-line))
   (evil-next-line count))
   (evil-global-set-key 'normal "`" 'comment-and-move)
+  (evil-global-set-key 'visual "`" 'comment-and-move)
 
   ;; Mimic fugitive bindings
   (evil-ex-define-cmd "Gst[atus]" 'magit-status))
