@@ -143,6 +143,7 @@
 
   ;; Do not use vim mappings in term-mode
   (evil-set-initial-state 'term-mode 'emacs)
+
   (evil-set-initial-state 'git-rebase-mode 'emacs)
 
   ;; The fastest way to leave insert mode:
@@ -226,7 +227,12 @@
   (helm-mode t)
   (diminish 'helm-mode)
   (global-set-key (kbd "M-x") 'helm-M-x)
-  (global-set-key (kbd "C-c f r") 'helm-recentf))
+  (global-set-key (kbd "C-c f r") 'helm-recentf)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-z")  'helm-select-action))
+
 (use-package helm-ls-git
   :ensure t)
 
