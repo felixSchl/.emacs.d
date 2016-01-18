@@ -288,6 +288,10 @@
 ;; Language / Framework support-------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
+;; Dockerfiles
+(use-package dockerfile-mode
+  :ensure t)
+
 ;; Purescript
 (use-package purescript-mode
   :load-path "~/.emacs.d/purescript-mode")
