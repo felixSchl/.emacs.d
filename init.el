@@ -34,6 +34,7 @@
 (setq system-uses-terminfo nil)
 (set-default 'truncate-lines t)
 (hl-line-mode t)
+(global-hl-line-mode)
 
 ;; Tabs/Spaces
 (setq-default indent-tabs-mode nil)
