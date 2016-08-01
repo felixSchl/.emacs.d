@@ -175,6 +175,17 @@
   ;; Mimic fugitive bindings
   (evil-ex-define-cmd "Gst[atus]" 'magit-status))
 
+;; Tree-based directory browsing
+(use-package dired-subtree
+  :ensure t
+  :init
+  (eval-after-load 'dired
+    '(progn
+       (evil-make-overriding-map dired-mode-map 'normal t)
+       (evil-define-key 'normal dired-mode-map
+         "o" 'dired-subtree-toggle
+       ))))
+
 ;; Evil commentary - Toggle comments
 (use-package evil-commentary
   :ensure t
