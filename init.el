@@ -186,6 +186,17 @@
          "o" 'dired-subtree-toggle
        ))))
 
+;; Filtered dired listings
+(use-package dired-filter
+  :ensure t
+  :init
+  (eval-after-load 'dired
+    '(progn
+       (evil-make-overriding-map dired-mode-map 'normal t)
+       (evil-define-key 'normal dired-mode-map
+         "." 'dired-filter-mode
+       ))))
+
 ;; Evil commentary - Toggle comments
 (use-package evil-commentary
   :ensure t
