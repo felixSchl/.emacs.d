@@ -95,14 +95,10 @@
 ;; Theme -----------------------------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
-(use-package atom-one-dark-theme
+(use-package spacemacs-theme
   :ensure t
   :init
-  (load-theme
-   (if (display-graphic-p)
-       'atom-one-dark
-     'tsdh-dark)
-   t))
+  (load-theme 'spacemacs-dark t))
 
 ;; -----------------------------------------------------------------------------
 ;; Configure Packages ----------------------------------------------------------
