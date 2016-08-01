@@ -160,6 +160,18 @@
   (evil-global-set-key 'normal "`" 'comment-and-move)
   (evil-global-set-key 'visual "`" 'comment-and-move)
 
+  ;; Open projectile-dired on `-`
+  (defun maybe-projectile-dired ()
+    (interactive)
+    (call-interactively
+     (if (projectile-project-p)
+         #'projectile-dired
+       (lambda ()
+         (interactive)
+         (dired default-directory)))))
+  (evil-global-set-key 'normal "-" 'maybe-projectile-dired)
+  (evil-global-set-key 'visual "-" 'maybe-projectile-dired)
+
   ;; Mimic fugitive bindings
   (evil-ex-define-cmd "Gst[atus]" 'magit-status))
 
@@ -242,6 +254,7 @@
   :ensure t
   :config
   (projectile-global-mode t)
+  (setq projectile-switch-project-action 'projectile-dired)
   (diminish 'projectile-mode))
 
 ;; Flx-ido - Proper fuzzy matching for ido-mode
