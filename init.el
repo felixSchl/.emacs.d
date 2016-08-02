@@ -333,6 +333,27 @@
 ;; Language / Framework support-------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
+;; Yaml
+(use-package yaml-mode
+  :ensure t
+  :config
+  (add-hook 'yaml-mode-hook '--prog-mode-hook))
+
+;; Typescript IDE
+(use-package typescript-mode
+  :ensure t
+  :config
+  (setq
+   typescript-indent-level 2
+   typescript-auto-indent-flag 0))
+
+(use-package tide
+  :ensure t
+  :config
+  (add-hook 'typescript-mode-hook
+          (lambda ()
+            (tide-setup))))
+
 ;; Dockerfiles
 (use-package dockerfile-mode
   :ensure t)
