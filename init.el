@@ -56,14 +56,13 @@
 (setq mac-command-modifier 'super)
 (setq mac-option-modifier 'meta)
 
-(defun my-prog-mode-hook ()
+(defun --prog-mode-hook ()
   (show-paren-mode t)
   (set-fill-column 80)
   (linum-mode t)
   (fci-mode t)
   (hl-line-mode t))
-(add-hook 'prog-mode-hook 'my-prog-mode-hook)
-
+(add-hook 'prog-mode-hook '--prog-mode-hook)
 
 ;; Fix fci-mode when used in conjunction with company-mode.
 ;; https://github.com/company-mode/company-mode/issues/180#issuecomment-55047120
