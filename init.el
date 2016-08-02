@@ -103,6 +103,12 @@
 ;; Configure Packages ----------------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
+;; Recover the $PATH from the shell
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize))
+
 ;; Smooth-Scrolling - Retain context during scrolling
 (use-package smooth-scrolling
   :ensure t)
