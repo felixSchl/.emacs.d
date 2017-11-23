@@ -25,9 +25,12 @@
 ;; -----------------------------------------------------------------------------
 
 (require 'diminish)
+
 (line-number-mode)
 (column-number-mode)
 (setq inhibit-splash-screen t)
+(smooth-scrolling-mode)
+(tool-bar-mode 0)
 (savehist-mode t)
 (set-fill-column 80)
 (setq gc-cons-threshold 20000000)
@@ -91,17 +94,15 @@
                   (find-file "~/.emacs.d/init.el")))
 
 ;; -----------------------------------------------------------------------------
-;; Theme -----------------------------------------------------------------------
-;; -----------------------------------------------------------------------------
-
-(use-package spacemacs-theme
-  :ensure t
-  :init
-  (load-theme 'spacemacs-dark t))
-
-;; -----------------------------------------------------------------------------
 ;; Configure Packages ----------------------------------------------------------
 ;; -----------------------------------------------------------------------------
+
+(use-package dracula-theme
+  :ensure t
+  :init '(load-theme 'dracula t))
+
+(use-package fill-column-indicator
+  :ensure t)
 
 ;; Recover the $PATH from the shell
 (use-package exec-path-from-shell
@@ -242,8 +243,6 @@
   :ensure t
   :config
   (global-diff-hl-mode)
-  ;; Highlight changes on-the-fly
-  (diff-hl-flydiff-mode)
   (unless (display-graphic-p)
     (setq diff-hl-side 'left)
     (diff-hl-margin-mode)))
@@ -358,31 +357,26 @@
 (use-package dockerfile-mode
   :ensure t)
 
+
+;; Haskell
+(use-package haskell-mode
+  :ensure t)
+
+(use-package intero
+  :ensure t
+  :config
+  (add-hook 'haskell-mode-hook 'intero-mode))
+
 ;; Purescript
 (use-package purescript-mode
-  :load-path "~/.emacs.d/purescript-mode")
+  :ensure t)
 
-;; Setup Flycheck by PureScript projects
-(use-package flycheck-purescript
-  :ensure t
-  :pin emacs-pe
-  :init (add-hook 'purescript-mode-hook #'flycheck-purescript-setup))
-
-;; Anaconda mode - Python mode
-(use-package anaconda-mode
+(use-package psc-ide
   :ensure t
   :config
-  (add-hook 'python-mode-hook 'anaconda-mode))
-
-;; Company-anaconda - Company completion backend
-(use-package company-anaconda
-  :ensure t
-  :config
-  (add-hook 'python-mode-hook
+  (add-hook 'purescript-mode-hook
             (lambda ()
-              (interactive)
-              (set (make-local-variable 'company-backends)
-                   '(company-files
-                     (company-dabbrev
-                      company-dabbrev-code
-                      company-anaconda))))))
+              (psc-ide-mode)
+              (company-mode)
+              (flycheck-mode)
+              (turn-on-purescript-indentation))))
