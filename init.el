@@ -31,6 +31,7 @@
 (setq inhibit-splash-screen t)
 (smooth-scrolling-mode)
 (tool-bar-mode 0)
+(scroll-bar-mode 0)
 (savehist-mode t)
 (set-fill-column 80)
 (setq gc-cons-threshold 20000000)
@@ -38,6 +39,7 @@
 (set-default 'truncate-lines t)
 (hl-line-mode t)
 (global-hl-line-mode)
+(put 'dired-find-alternate-file 'disabled nil)
 
 ;; Tabs/Spaces
 (setq-default indent-tabs-mode nil)
@@ -53,7 +55,6 @@
         trailing
         tab-mark empty))
 (global-whitespace-mode t)
-(diminish 'whitespace-mode)
 
 ;; Remap command to option on Apple Mac
 (setq mac-command-modifier 'super)
@@ -96,6 +97,14 @@
 ;; -----------------------------------------------------------------------------
 ;; Configure Packages ----------------------------------------------------------
 ;; -----------------------------------------------------------------------------
+
+(use-package multi-term
+  :ensure t
+  :config '(setq multi-term-program "/bin/zsh"))
+
+(use-package diminish
+  :ensure t
+  :init '(diminish 'whitespace-mode))
 
 (use-package dracula-theme
   :ensure t
