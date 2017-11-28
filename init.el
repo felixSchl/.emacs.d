@@ -107,6 +107,11 @@
 ;; Configure Packages ----------------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
+(use-package ace-window
+  :ensure t
+  :config
+  (global-set-key (kbd "M-p") 'ace-window))
+
 (use-package multi-term
   :ensure t
   :config '(setq multi-term-program "/bin/zsh"))
