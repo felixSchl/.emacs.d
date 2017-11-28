@@ -395,3 +395,14 @@
               (company-mode)
               (flycheck-mode)
               (turn-on-purescript-indentation))))
+
+;; Apple swift
+(use-package swift-mode
+  :ensure t
+  :config
+  '(setq swift-mode:basic-offset 2))
+
+(use-package flycheck-swift
+  :ensure t
+  :config
+  '(eval-after-load 'flycheck '(flycheck-swift-setup)))
