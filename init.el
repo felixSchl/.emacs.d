@@ -41,6 +41,12 @@
 (global-hl-line-mode)
 (put 'dired-find-alternate-file 'disabled nil)
 
+;; OSX - Use `Command' key as `alt' key
+(setq mac-option-key-is-meta nil
+      mac-command-key-is-meta t
+      mac-command-modifier 'meta
+      mac-option-modifier 'none)
+
 ;; Tabs/Spaces
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
