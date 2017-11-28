@@ -8,3 +8,4 @@ anaconda-mode/
 auto-save-list/
 history
 projectile-bookmarks.eld
+/flycheck_init.el

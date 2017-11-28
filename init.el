@@ -61,6 +61,9 @@
         trailing
         tab-mark empty))
 (global-whitespace-mode t)
+(add-hook 'term-mode-hook
+          (lambda()
+            (whitespace-mode 0)))
 
 ;; Remap command to option on Apple Mac
 (setq mac-command-modifier 'super)
