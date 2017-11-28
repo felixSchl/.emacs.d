@@ -337,6 +337,10 @@
   :config
   (global-evil-visualstar-mode))
 
+;; -----------------------------------------------------------------------------
+;; Language / Framework support-------------------------------------------------
+;; -----------------------------------------------------------------------------
+
 ;; Markdown
 (use-package markdown-mode
   :ensure t
@@ -351,9 +355,6 @@
               (fci-mode t)
               (set-fill-column 80))))
 
-;; -----------------------------------------------------------------------------
-;; Language / Framework support-------------------------------------------------
-;; -----------------------------------------------------------------------------
 
 ;; Yaml
 (use-package yaml-mode
@@ -380,7 +381,6 @@
 (use-package dockerfile-mode
   :ensure t)
 
-
 ;; Haskell
 (use-package haskell-mode
   :ensure t)
@@ -402,9 +402,10 @@
               (psc-ide-mode)
               (company-mode)
               (flycheck-mode)
-              (turn-on-purescript-indentation))))
+              (turn-on-purescript-indentation)
+              (define-key evil-normal-state-map "gd" 'psc-ide-goto-definition))))
 
-;; Apple swift
+;; Apple Swift
 (use-package swift-mode
   :ensure t
   :config
