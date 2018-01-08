@@ -463,7 +463,11 @@
 
 ;; Haskell
 (use-package haskell-mode
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'haskell-mode-hook
+            (lambda ()
+              (setq evil-shift-width 2))))
 
 (use-package intero
   :ensure t
@@ -472,7 +476,11 @@
 
 ;; Purescript
 (use-package purescript-mode
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'purescript-mode-hook
+            (lambda ()
+              (setq evil-shift-width 2))))
 
 (use-package psc-ide
   :ensure t
