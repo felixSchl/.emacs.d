@@ -485,6 +485,7 @@
 (use-package psc-ide
   :ensure t
   :config
+  (setq psc-ide-use-npm-bin t)
   (add-hook 'purescript-mode-hook
             (lambda ()
               (psc-ide-mode)
