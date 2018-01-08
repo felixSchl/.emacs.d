@@ -190,7 +190,9 @@
   (add-hook 'after-init-hook
             (lambda()
               (global-flycheck-mode)
-              (diminish 'flycheck-mode))))
+              (diminish 'flycheck-mode)))
+  :config
+  (setq flycheck-check-syntax-automatically '(save)))
 
 ;; Key-chord - Key stroke combos
 (use-package key-chord
