@@ -147,6 +147,12 @@
             popwin:special-display-config)
     (popwin-mode t)))
 
+;; TODO - avoid this on OSX?
+(use-package xclip
+  :ensure t
+  :config
+  (xclip-mode t))
+
 (use-package ace-window
   :ensure t
   :config
