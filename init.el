@@ -210,6 +210,9 @@
   (evil-mode t)
   (diminish 'undo-tree-mode)
 
+  ;; Return to normal mode when saving files using C-X C-S
+  (add-hook 'after-save-hook #'evil-normal-state)
+
   ;; "Hybrid" editing style:
   ;; (this allows for keymacs key-bindings in insert-mode)
   (setcdr evil-insert-state-map nil)
