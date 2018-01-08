@@ -70,6 +70,14 @@
 (setq mac-command-modifier 'super)
 (setq mac-option-modifier 'meta)
 
+;; Always save the buffer (even if emacs thinks there are no changes)
+(defun save-buffer-always ()
+  "Save the buffer even if it is not modified."
+  (interactive)
+  (set-buffer-modified-p t)
+  (save-buffer))
+(global-set-key (kbd "C-x C-s") 'save-buffer-always)
+
 (defun --prog-mode-hook ()
   (show-paren-mode t)
   (set-fill-column 80)
