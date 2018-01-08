@@ -166,9 +166,9 @@
   :ensure t
   :init '(diminish 'whitespace-mode))
 
-(use-package dracula-theme
+(use-package monokai-theme
   :ensure t
-  :init '(load-theme 'dracula t))
+  :init '(load-theme 'monokai t))
 
 (use-package fill-column-indicator
   :ensure t)
