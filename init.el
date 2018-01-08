@@ -259,6 +259,9 @@
   (evil-global-set-key 'normal "-" 'maybe-projectile-dired)
   (evil-global-set-key 'visual "-" 'maybe-projectile-dired)
 
+  ;; Start git commit mode in evil insert mode
+  (add-hook 'git-commit-mode-hook 'evil-insert-state)
+
   ;; Mimic fugitive bindings
   (evil-ex-define-cmd "Gst[atus]" 'magit-status))
 
