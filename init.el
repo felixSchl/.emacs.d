@@ -30,6 +30,7 @@
 (column-number-mode)
 (setq inhibit-splash-screen t)
 (smooth-scrolling-mode)
+(menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (savehist-mode t)
