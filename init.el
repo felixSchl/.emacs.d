@@ -411,6 +411,12 @@
   :config
   (global-evil-visualstar-mode))
 
+;; Disable the mouse to avoid accidental trackpad scrolls
+(use-package disable-mouse
+  :ensure t
+  :config
+  (disable-mouse-global-mode t))
+
 ;; -----------------------------------------------------------------------------
 ;; Language / Framework support-------------------------------------------------
 ;; -----------------------------------------------------------------------------
