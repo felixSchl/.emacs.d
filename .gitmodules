@@ -1,3 +1,0 @@
-[submodule "purescript-mode"]
-	path = purescript-mode
-	url = git@github.com:emacs-pe/purescript-mode
