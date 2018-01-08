@@ -45,6 +45,9 @@
 (define-abbrev-table 'global-abbrev-table
   '(("forall" "∀" nil 1)))
 
+;; Javascript
+(setq js-indent-level 2)
+
 ;; OSX - Use `Command' key as `alt' key
 (setq mac-option-key-is-meta nil
       mac-command-key-is-meta t
