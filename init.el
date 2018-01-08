@@ -359,6 +359,12 @@
   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-z")  'helm-select-action))
 
+;; A better git-grep experience than the one built into helm
+(use-package helm-git-grep
+  :ensure t
+  :config
+  (global-set-key (kbd "C-c C-f") 'helm-git-grep))
+
 (use-package helm-ls-git
   :ensure t)
 
