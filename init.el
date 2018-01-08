@@ -224,9 +224,14 @@
   (setcdr evil-insert-state-map nil)
   (define-key evil-insert-state-map [escape] 'evil-normal-state)
 
-  ;; Do not use vim mappings in term-mode
-  (evil-set-initial-state 'term-mode 'emacs)
+  ;; flip c-v and v visual modes
+  (define-key evil-normal-state-map (kbd  "v") 'evil-visual-block)
+  (define-key evil-normal-state-map (kbd "C-v") 'evil-visual-char)
+  (define-key evil-visual-state-map (kbd "v") 'evil-visual-block)
+  (define-key evil-visual-state-map (kbd "C-v") 'evil-visual-char)
 
+  ;; Do not use vim mappings in some modes
+  (evil-set-initial-state 'term-mode 'emacs)
   (evil-set-initial-state 'git-rebase-mode 'emacs)
 
   ;; The fastest way to leave insert mode:
