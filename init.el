@@ -262,6 +262,12 @@
   ;; Mimic fugitive bindings
   (evil-ex-define-cmd "Gst[atus]" 'magit-status))
 
+;; Surround mode
+(use-package evil-surround
+  :ensure t
+  :config
+  (evil-surround-mode t))
+
 ;; Tree-based directory browsing
 (use-package dired-subtree
   :ensure t
