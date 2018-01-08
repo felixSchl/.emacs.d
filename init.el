@@ -116,6 +116,37 @@
 ;; Configure Packages ----------------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
+(use-package popwin
+  :ensure t
+  :config
+  (progn
+    (setq popwin:special-display-config nil)
+    (push '("*Backtrace*"
+            :dedicated t :position bottom :stick t :noselect nil :height 0.33)
+          popwin:special-display-config)
+    (push '("*compilation*"
+            :dedicated t :position bottom :stick t :noselect t   :height 0.2)
+          popwin:special-display-config)
+    (push '("*Compile-Log*"
+            :dedicated t :position bottom :stick t :noselect t   :height 0.33)
+          popwin:special-display-config)
+    (push '("*Help*"
+            :dedicated t :position bottom :stick t :noselect nil :height 0.33)
+          popwin:special-display-config)
+    (push '("*Shell Command Output*"
+            :dedicated t :position bottom :stick t :noselect nil :height 0.33)
+          popwin:special-display-config)
+    (push '(" *undo-tree*"
+            :dedicated t :position bottom :stick t :noselect nil :height 0.33)
+          popwin:special-display-config)
+    (push '("*Warnings*"
+            :dedicated t :position bottom :stick t :noselect nil :height 0.33)
+          popwin:special-display-config)
+    (push '("^\\*Man .*\\*$"
+            :regexp t    :position bottom :stick t :noselect nil :height 0.33)
+            popwin:special-display-config)
+    (popwin-mode t)))
+
 (use-package ace-window
   :ensure t
   :config
