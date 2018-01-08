@@ -42,6 +42,9 @@
 (global-hl-line-mode)
 (put 'dired-find-alternate-file 'disabled nil)
 
+(define-abbrev-table 'global-abbrev-table
+  '(("forall" "∀" nil 1)))
+
 ;; OSX - Use `Command' key as `alt' key
 (setq mac-option-key-is-meta nil
       mac-command-key-is-meta t
