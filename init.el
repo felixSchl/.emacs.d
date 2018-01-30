@@ -45,7 +45,22 @@
 (define-abbrev-table 'global-abbrev-table
   '(("forall" "∀" nil 1)))
 
-;; Javascript
+;; Auto-revert dired buffers when files change on disk
+(add-hook 'dired-mode-hook
+          (lambda ()
+            (auto-revert-mode t)))
+
+;; Toggle-Maximize a buffer
+(defun toggle-maximize-buffer () "Maximize buffer"
+  (interactive)
+  (if (= 1 (length (window-list)))
+      (jump-to-register '_)
+    (progn
+      (window-configuration-to-register '_)
+      (delete-other-windows))))
+(global-set-key [(meta shift return)] 'toggle-maximize-buffer)
+
+;; Configure Javascript
 (setq js-indent-level 2)
 
 ;; OSX - Use `Command' key as `alt' key
@@ -187,7 +202,14 @@
 
 ;; Smooth-Scrolling - Retain context during scrolling
 (use-package smooth-scrolling
-  :ensure t)
+  :ensure t
+  :config
+    (setq scroll-margin 1
+      scroll-conservatively 0
+      scroll-up-aggressively 0.01
+      scroll-down-aggressively 0.01)
+    (setq-default scroll-up-aggressively 0.01
+      scroll-down-aggressively 0.01))
 
 ;; Flycheck - on-the-fly syntax checking
 (use-package flycheck
@@ -265,11 +287,21 @@
   ;; Mimic fugitive bindings
   (evil-ex-define-cmd "Gst[atus]" 'magit-status))
 
+;; Evil support for org-mode
+(use-package evil-org
+  :ensure t
+  :after org
+  :config
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (add-hook 'evil-org-mode-hook
+            (lambda ()
+              (evil-org-set-key-theme))))
+
 ;; Surround mode
 (use-package evil-surround
   :ensure t
   :config
-  (evil-surround-mode t))
+  (global-evil-surround-mode t))
 
 ;; Tree-based directory browsing
 (use-package dired-subtree
@@ -279,8 +311,9 @@
     '(progn
        (evil-make-overriding-map dired-mode-map 'normal t)
        (evil-define-key 'normal dired-mode-map
-         "o" 'dired-subtree-toggle
-       ))))
+         "g" 'revert-buffer)
+       (evil-define-key 'normal dired-mode-map
+         "o" 'dired-subtree-toggle))))
 
 ;; Filtered dired listings
 (use-package dired-filter
@@ -332,14 +365,14 @@
   :config
   (spaceline-spacemacs-theme))
 
-;; Diff-hl - Highlight changed lines
-(use-package diff-hl
-  :ensure t
-  :config
-  (global-diff-hl-mode)
-  (unless (display-graphic-p)
-    (setq diff-hl-side 'left)
-    (diff-hl-margin-mode)))
+;; ;; Diff-hl - Highlight changed lines
+;; (use-package diff-hl
+;;   :ensure t
+;;   :config
+;;   (global-diff-hl-mode)
+;;   (unless (display-graphic-p)
+;;     (setq diff-hl-side 'left)
+;;     (diff-hl-margin-mode)))
 
 ;; Column-marker - Mark the 80ths column
 (use-package column-marker
@@ -475,7 +508,8 @@
 (use-package intero
   :ensure t
   :config
-  (add-hook 'haskell-mode-hook 'intero-mode))
+  (add-hook 'haskell-mode-hook 'intero-mode)
+  (define-key evil-normal-state-map "gd" 'intero-goto-definition))
 
 ;; Purescript
 (use-package purescript-mode
