@@ -9,7 +9,8 @@
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("emacs-pe" . "https://emacs-pe.github.io/packages/")
                          ("marmalade" . "https://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.org/packages/")))
+                         ("melpa" . "http://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")))
 (package-initialize)
 
 ;; Bootstrap `use-package'
@@ -132,6 +133,21 @@
                   ()
                   (interactive)
                   (find-file "~/.emacs.d/init.el")))
+
+;; -----------------------------------------------------------------------------
+;; Org mode --------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((dot . t)))
+
+(eval-after-load
+    'org
+  (add-hook 'org-babel-after-execute-hook
+            (lambda ()
+              (when org-inline-image-overlays
+                (org-redisplay-inline-images)))))
 
 ;; -----------------------------------------------------------------------------
 ;; Configure Packages ----------------------------------------------------------
