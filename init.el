@@ -88,10 +88,6 @@
           (lambda()
             (whitespace-mode 0)))
 
-;; Remap command to option on Apple Mac
-(setq mac-command-modifier 'super)
-(setq mac-option-modifier 'meta)
-
 ;; Always save the buffer (even if emacs thinks there are no changes)
 (defun save-buffer-always ()
   "Save the buffer even if it is not modified."
@@ -463,12 +459,6 @@
   :config
   (global-evil-visualstar-mode))
 
-;; Disable the mouse to avoid accidental trackpad scrolls
-(use-package disable-mouse
-  :ensure t
-  :config
-  (disable-mouse-global-mode t))
-
 ;; -----------------------------------------------------------------------------
 ;; Language / Framework support-------------------------------------------------
 ;; -----------------------------------------------------------------------------
@@ -507,7 +497,8 @@
   :config
   (add-hook 'typescript-mode-hook
           (lambda ()
-            (tide-setup))))
+            (tide-setup)
+            (define-key evil-normal-state-map "gd" 'tide-jump-to-definition))))
 
 ;; Dockerfiles
 (use-package dockerfile-mode
@@ -524,8 +515,9 @@
 (use-package intero
   :ensure t
   :config
-  (add-hook 'haskell-mode-hook 'intero-mode)
-  (define-key evil-normal-state-map "gd" 'intero-goto-definition))
+  (add-hook 'haskell-mode-hook
+            (intero-mode t)
+            (define-key evil-normal-state-map "gd" 'intero-goto-definition)))
 
 ;; Purescript
 (use-package purescript-mode
