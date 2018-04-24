@@ -100,6 +100,7 @@
   (show-paren-mode t)
   (set-fill-column 80)
   (linum-mode t)
+  (abbrev-mode t)
   (fci-mode t)
   (hl-line-mode t))
 (add-hook 'prog-mode-hook '--prog-mode-hook)
