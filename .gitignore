@@ -9,3 +9,8 @@ auto-save-list/
 history
 projectile-bookmarks.eld
 /flycheck_init.el
+abbrev_defs
+eshell/
+*.data
+*.cache
+session.*
