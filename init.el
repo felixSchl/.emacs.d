@@ -99,6 +99,7 @@
 (defun --prog-mode-hook ()
   (show-paren-mode t)
   (set-fill-column 80)
+  (abbrev-mode t)
   (linum-mode t)
   (abbrev-mode t)
   (fci-mode t)
@@ -139,12 +140,16 @@
  'org-babel-load-languages
  '((dot . t)))
 
-(eval-after-load
-    'org
-  (add-hook 'org-babel-after-execute-hook
-            (lambda ()
-              (when org-inline-image-overlays
-                (org-redisplay-inline-images)))))
+(eval-after-load 'org
+  (lambda ()
+    (add-hook 'org-babel-after-execute-hook
+              (lambda ()
+                (when org-inline-image-overlays
+                    (org-redisplay-inline-images))))
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (flyspell-mode t)
+                (setq default-fill-column 80)))))
 
 ;; -----------------------------------------------------------------------------
 ;; Configure Packages ----------------------------------------------------------
