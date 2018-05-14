@@ -555,3 +555,9 @@
   :ensure t
   :config
   '(eval-after-load 'flycheck '(flycheck-swift-setup)))
+
+;; Shell
+(add-hook 'sh-mode-hook
+          (lambda ()
+            (setq indent-tabs-mode t)))
+
