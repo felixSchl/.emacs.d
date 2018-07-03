@@ -311,6 +311,11 @@
   ;; Mimic fugitive bindings
   (evil-ex-define-cmd "Gst[atus]" 'magit-status))
 
+(defun custom-save-buffer ()
+  "Save the buffer but don't muck up evil-repeat."
+  (interactive)
+  (save-buffer nil))
+
 ;; Evil support for org-mode
 (use-package evil-org
   :ensure t
@@ -319,7 +324,9 @@
   (add-hook 'org-mode-hook 'evil-org-mode)
   (add-hook 'evil-org-mode-hook
             (lambda ()
-              (evil-org-set-key-theme))))
+              (evil-org-set-key-theme)))
+  (evil-declare-not-repeat 'custom-save-buffer)
+  (global-set-key (kbd "C-x C-s") 'custom-save-buffer))
 
 ;; Surround mode
 (use-package evil-surround
