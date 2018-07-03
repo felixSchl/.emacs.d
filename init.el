@@ -161,6 +161,12 @@
 ;; Configure Packages ----------------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
+(use-package git-link
+  :ensure t
+  :config
+  (progn
+    (setq git-link-use-commit t)))
+
 (use-package popwin
   :ensure t
   :config
