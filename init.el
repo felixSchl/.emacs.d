@@ -181,7 +181,7 @@
     (push '("*Shell Command Output*"
             :dedicated t :position bottom :stick t :noselect nil :height 0.33)
           popwin:special-display-config)
-    (push '(" *undo-tree*"
+    (push '("*undo-tree*"
             :dedicated t :position bottom :stick t :noselect nil :height 0.33)
           popwin:special-display-config)
     (push '("*Warnings*"
