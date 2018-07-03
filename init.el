@@ -552,9 +552,9 @@
   (setq psc-ide-use-npm-bin t)
   (add-hook 'purescript-mode-hook
             (lambda ()
-              (psc-ide-mode)
-              (company-mode)
-              (flycheck-mode)
+              (psc-ide-mode t)
+              (company-mode t)
+              (flycheck-mode t)
               (turn-on-purescript-indentation)
               (define-key evil-normal-state-map "gd" 'psc-ide-goto-definition))))
 
