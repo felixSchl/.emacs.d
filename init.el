@@ -43,6 +43,12 @@
 (global-hl-line-mode)
 (put 'dired-find-alternate-file 'disabled nil)
 
+;; Configure dired-mode
+(add-hook 'dired-mode-hook
+          (lambda ()
+            (dired-omit-mode)))
+
+;; Define abbreviations
 (define-abbrev-table 'global-abbrev-table
   '(("forall" "∀" nil 1)))
 
