@@ -374,6 +374,7 @@
 (use-package magit
   :ensure t
   :init
+  (global-set-key (kbd "C-x g") 'magit-status)
   (setq magit-diff-paint-whitespace t)
   (setq magit-diff-highlight-trailing t))
 
