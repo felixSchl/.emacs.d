@@ -403,20 +403,15 @@
   :config
   (spaceline-spacemacs-theme))
 
-;; ;; Diff-hl - Highlight changed lines
-;; (use-package diff-hl
-;;   :ensure t
-;;   :config
-;;   (global-diff-hl-mode)
-;;   (unless (display-graphic-p)
-;;     (setq diff-hl-side 'left)
-;;     (diff-hl-margin-mode)))
-
-;; Column-marker - Mark the 80ths column
-(use-package column-marker
+;; Diff-hl - Highlight changed lines
+(use-package diff-hl
   :ensure t
   :config
-  (column-marker-1 80))
+  (global-diff-hl-mode)
+  (unless (display-graphic-p)
+    (setq diff-hl-side 'left)
+    (diff-hl-margin-mode)))
+
 
 ;; Helm - incremental completion framework
 (use-package helm
