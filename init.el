@@ -25,12 +25,12 @@
 ;; Settings --------------------------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
-(require 'diminish)
+(use-package diminish)
 
 (line-number-mode)
 (column-number-mode)
 (setq inhibit-splash-screen t)
-(smooth-scrolling-mode)
+;(smooth-scrolling-mode)
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
