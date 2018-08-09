@@ -484,6 +484,16 @@
 ;; Language / Framework support-------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
+;; C
+(add-hook
+ 'c-mode-common-hook
+ (progn
+   (setq-default
+    backward-delete-char-untabify-method nil
+    c-basic-offset 4
+    tab-width 4
+    indent-tabs-mode t)))
+
 ;; Markdown
 (use-package markdown-mode
   :ensure t
