@@ -161,6 +161,9 @@
 ;; Configure Packages ----------------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
+(use-package keychain-environment
+  :ensure t)
+
 (use-package git-link
   :ensure t
   :config
@@ -490,9 +493,13 @@
  (progn
    (setq-default
     backward-delete-char-untabify-method nil
-    c-basic-offset 4
-    tab-width 4
+    c-basic-offset 8
+    tab-width 8
     indent-tabs-mode t)))
+
+;; JSON
+(use-package json-mode
+  :ensure t)
 
 ;; Markdown
 (use-package markdown-mode
