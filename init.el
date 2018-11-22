@@ -573,18 +573,20 @@
   :config
   (add-hook 'purescript-mode-hook
             (lambda ()
+              (turn-on-purescript-indentation)
               (setq evil-shift-width 2))))
 
 (use-package psc-ide
   :ensure t
   :config
-  (setq psc-ide-use-npm-bin t)
   (add-hook 'purescript-mode-hook
             (lambda ()
+              (setq psc-ide-use-npm-bin t)
               (psc-ide-mode t)
               (company-mode t)
               (flycheck-mode t)
               (turn-on-purescript-indentation)
+              (setq evil-shift-width 2)
               (define-key evil-normal-state-map "gd" 'psc-ide-goto-definition))))
 
 ;; Apple Swift
