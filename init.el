@@ -442,7 +442,7 @@
 (use-package projectile
   :ensure t
   :config
-  (projectile-global-mode t)
+  (projectile-mode t)
   (setq projectile-switch-project-action 'projectile-dired)
   (diminish 'projectile-mode))
 
