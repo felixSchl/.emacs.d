@@ -320,6 +320,7 @@
 (defun custom-save-buffer ()
   "Save the buffer but don't muck up evil-repeat."
   (interactive)
+  (set-buffer-modified-p t)
   (save-buffer nil))
 
 ;; Evil support for org-mode
