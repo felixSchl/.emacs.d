@@ -433,7 +433,8 @@
 (use-package helm-git-grep
   :ensure t
   :config
-  (global-set-key (kbd "C-c C-f") 'helm-git-grep))
+  (global-set-key (kbd "C-c C-f") 'helm-git-grep)
+  (global-set-key (kbd "C-c g f") 'helm-git-grep))
 
 (use-package helm-ls-git
   :ensure t)
