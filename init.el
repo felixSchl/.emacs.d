@@ -413,7 +413,9 @@
   (require 'spaceline-config)
   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
   :config
-  (spaceline-spacemacs-theme))
+  (progn
+    (spaceline-spacemacs-theme)
+    (spaceline-toggle-minor-modes-off))
 
 ;; Diff-hl - Highlight changed lines
 (use-package diff-hl
