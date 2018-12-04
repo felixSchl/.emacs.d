@@ -109,6 +109,7 @@
   (linum-mode t)
   (abbrev-mode t)
   (fci-mode t)
+  (setq indent-tabs-mode nil)
   (hl-line-mode t))
 (add-hook 'prog-mode-hook '--prog-mode-hook)
 
