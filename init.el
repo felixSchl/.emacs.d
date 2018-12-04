@@ -272,6 +272,9 @@
   (evil-mode t)
   (diminish 'undo-tree-mode)
 
+  ;; Do not consider saving a buffer a repeatable action
+  (evil-declare-not-repeat 'custom-save-buffer)
+
   ;; Return to normal mode when saving files using C-X C-S
   (add-hook 'after-save-hook #'evil-normal-state)
 
