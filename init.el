@@ -562,6 +562,19 @@
             (lambda ()
               (setq evil-shift-width 2))))
 
+;; Language server protocol
+(use-package lsp-mode
+    :init
+    (add-hook 'prog-mode-hook 'lsp-mode))
+
+;; Rust
+(use-package rust-mode
+    :mode "\\.rs\\'"
+    :init
+    (setq rust-format-on-save t))
+
+(use-package lsp-rust
+    :after lsp-mode)
 (use-package intero
   :ensure t
   :config
