@@ -338,8 +338,12 @@
   (add-hook 'org-mode-hook 'evil-org-mode)
   (add-hook 'evil-org-mode-hook
             (lambda ()
-              (evil-org-set-key-theme)))
-  (evil-declare-not-repeat 'custom-save-buffer)
+              (evil-org-set-key-theme '(navigation
+                                        insert
+                                        textobjects
+                                        additional
+                                        calendar
+                                        return))))
   (global-set-key (kbd "C-x C-s") 'custom-save-buffer))
 
 ;; Surround mode
