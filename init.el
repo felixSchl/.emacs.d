@@ -345,8 +345,10 @@
 ;; Evil support for org-mode
 (use-package evil-org
   :ensure t
+  :requires evil
   :after org
   :config
+  (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
   (add-hook 'org-mode-hook 'evil-org-mode)
   (add-hook 'evil-org-mode-hook
             (lambda ()
@@ -437,7 +439,6 @@
   (unless (display-graphic-p)
     (setq diff-hl-side 'left)
     (diff-hl-margin-mode)))
-
 
 ;; Helm - incremental completion framework
 (use-package helm
