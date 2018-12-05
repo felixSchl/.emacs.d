@@ -103,6 +103,7 @@
 (global-set-key (kbd "C-x C-s") 'save-buffer-always)
 
 (defun --prog-mode-hook ()
+  (setq indent-tabs-mode nil)
   (show-paren-mode t)
   (set-fill-column 80)
   (abbrev-mode t)
