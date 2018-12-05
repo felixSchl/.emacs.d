@@ -144,6 +144,16 @@
 ;; Org mode --------------------------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
+(use-package org
+  :mode (("\\.org$" . org-mode))
+  :ensure t
+  :config
+  (progn
+    ;; Prevent insertion of leading whitespace when hitting 'o' on a heading in
+    ;; org-mode.
+    ;; See: https://github.com/syl20bnr/spacemacs/issues/11204
+    (setq org-adapt-indentation nil)))
+
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((dot . t)))
