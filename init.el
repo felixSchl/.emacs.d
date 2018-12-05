@@ -440,6 +440,14 @@
     (setq diff-hl-side 'left)
     (diff-hl-margin-mode)))
 
+;; Highlight hex-color literals
+(use-package rainbow-mode
+  :config
+  (progn
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (rainbow-mode t)))))
+
 ;; Helm - incremental completion framework
 (use-package helm
   :ensure t
