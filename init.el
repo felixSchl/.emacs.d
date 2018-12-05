@@ -533,9 +533,21 @@
     (define-key map (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
     (define-key map (kbd "M-9") 'eyebrowse-switch-to-window-config-9)))
 
+;; Use nlinum mode over normal linum mode
+(use-package nlinum
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (nlinum-mode t))))
+
 ;; -----------------------------------------------------------------------------
 ;; Language / Framework support-------------------------------------------------
 ;; -----------------------------------------------------------------------------
+
+;; asciidoc
+(use-package adoc-mode
+  :ensure t)
 
 ;; C
 (add-hook
