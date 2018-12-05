@@ -109,6 +109,7 @@
   (linum-mode t)
   (abbrev-mode t)
   (fci-mode t)
+  (setq indent-tabs-mode nil)
   (hl-line-mode t))
 (add-hook 'prog-mode-hook '--prog-mode-hook)
 
@@ -160,6 +161,10 @@
 ;; -----------------------------------------------------------------------------
 ;; Configure Packages ----------------------------------------------------------
 ;; -----------------------------------------------------------------------------
+
+;; Integrate with `keychain` utility
+(use-package keychain-environment
+  :ensure t)
 
 (use-package git-link
   :ensure t
@@ -268,6 +273,9 @@
   (evil-mode t)
   (diminish 'undo-tree-mode)
 
+  ;; Do not consider saving a buffer a repeatable action
+  (evil-declare-not-repeat 'custom-save-buffer)
+
   ;; Return to normal mode when saving files using C-X C-S
   (add-hook 'after-save-hook #'evil-normal-state)
 
@@ -331,8 +339,12 @@
   (add-hook 'org-mode-hook 'evil-org-mode)
   (add-hook 'evil-org-mode-hook
             (lambda ()
-              (evil-org-set-key-theme)))
-  (evil-declare-not-repeat 'custom-save-buffer)
+              (evil-org-set-key-theme '(navigation
+                                        insert
+                                        textobjects
+                                        additional
+                                        calendar
+                                        return))))
   (global-set-key (kbd "C-x C-s") 'custom-save-buffer))
 
 ;; Surround mode
@@ -402,7 +414,9 @@
   (require 'spaceline-config)
   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
   :config
-  (spaceline-spacemacs-theme))
+  (progn
+    (spaceline-spacemacs-theme)
+    (spaceline-toggle-minor-modes-off))
 
 ;; Diff-hl - Highlight changed lines
 (use-package diff-hl
@@ -433,8 +447,8 @@
 (use-package helm-git-grep
   :ensure t
   :config
-  (global-set-key (kbd "C-c C-f") 'helm-git-grep)
-  (global-set-key (kbd "C-c g f") 'helm-git-grep))
+  (global-set-key (kbd "C-c g f") 'helm-git-grep)
+  (global-set-key (kbd "C-c C-f") 'helm-git-grep))
 
 (use-package helm-ls-git
   :ensure t)
@@ -513,6 +527,10 @@
     tab-width 8
     indent-tabs-mode t)))
 
+;; JSON
+(use-package json-mode
+  :ensure t)
+
 ;; Markdown
 (use-package markdown-mode
   :ensure t
@@ -562,6 +580,19 @@
             (lambda ()
               (setq evil-shift-width 2))))
 
+;; Language server protocol
+(use-package lsp-mode
+    :init
+    (add-hook 'prog-mode-hook 'lsp-mode))
+
+;; Rust
+(use-package rust-mode
+    :mode "\\.rs\\'"
+    :init
+    (setq rust-format-on-save t))
+
+(use-package lsp-rust
+    :after lsp-mode)
 (use-package intero
   :ensure t
   :config
