@@ -553,7 +553,7 @@
 (add-hook
  'c-mode-common-hook
  (progn
-   (setq-default
+   (setq
     backward-delete-char-untabify-method nil
     c-basic-offset 8
     tab-width 8
