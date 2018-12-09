@@ -541,6 +541,13 @@
             (lambda ()
               (nlinum-mode t))))
 
+;; Email via notmuch MUA
+(use-package notmuch
+  :ensure t
+  :config
+  (evil-set-initial-state 'notmuch-tree 'emacs)
+  (evil-set-initial-state 'notmuch-search 'emacs))
+
 ;; -----------------------------------------------------------------------------
 ;; Language / Framework support-------------------------------------------------
 ;; -----------------------------------------------------------------------------
