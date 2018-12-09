@@ -309,27 +309,6 @@
   (dolist (x '("jk" "jK" "JK" "Jk" "kj" "kJ" "KJ" "Kj"))
     (key-chord-define evil-insert-state-map x 'evil-normal-state))
 
-  ;; Quickly comment a line using `evil-commentary`
-  (defun comment-and-move (count)
-  (interactive "p")
-  (let ((current-prefix-arg count))
-    (call-interactively 'evil-commentary-line))
-  (evil-next-line count))
-  (evil-global-set-key 'normal "`" 'comment-and-move)
-  (evil-global-set-key 'visual "`" 'comment-and-move)
-
-  ;; Open projectile-dired on `-`
-  (defun maybe-projectile-dired ()
-    (interactive)
-    (call-interactively
-     (if (projectile-project-p)
-         #'projectile-dired
-       (lambda ()
-         (interactive)
-         (dired default-directory)))))
-  (evil-global-set-key 'normal "-" 'maybe-projectile-dired)
-  (evil-global-set-key 'visual "-" 'maybe-projectile-dired)
-
   ;; Start git commit mode in evil insert mode
   (add-hook 'git-commit-mode-hook 'evil-insert-state)
 
