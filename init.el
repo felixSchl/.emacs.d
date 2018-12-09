@@ -429,7 +429,7 @@
   :config
   (progn
     (spaceline-spacemacs-theme)
-    (spaceline-toggle-minor-modes-off))
+    (spaceline-toggle-minor-modes-off)))
 
 ;; Diff-hl - Highlight changed lines
 (use-package diff-hl
