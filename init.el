@@ -577,6 +577,13 @@
   (setq mu4e-alert-interesting-mail-query
         "(maildir:/gmail/Inbox OR maildir:/fastmail/Inbox) AND flag:unread"))
 
+;; A set of useful evil bindings
+(use-package evil-collection
+  :ensure t
+  :requires evil
+  :config
+  (evil-collection-mu4e-setup))
+
 ;; -----------------------------------------------------------------------------
 ;; Language / Framework support-------------------------------------------------
 ;; -----------------------------------------------------------------------------
