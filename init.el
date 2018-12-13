@@ -407,6 +407,13 @@
   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
   :config
   (progn
+    (spaceline-define-segment buffer-id
+      (if (buffer-file-name)
+          (let ((project-root (projectile-project-p)))
+            (if project-root
+                (file-relative-name (buffer-file-name) project-root)
+              (abbreviate-file-name (buffer-file-name))))
+        (powerline-buffer-id)))
     (spaceline-spacemacs-theme)
     (spaceline-toggle-minor-modes-off)))
 
