@@ -527,49 +527,54 @@
             (lambda ()
               (nlinum-mode t))))
 
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
-(require 'mu4e)
-(setq
- mu4e-maildir "~/mail"
- mu4e-update-interval 10
- mu4e-change-filenames-when-moving t
- mu4e-contexts
-    `( ,(make-mu4e-context
-          :name "Gmail"
-          :match-func
-          (lambda (msg)
-            (when msg
-              (mu4e-message-contact-field-matches
-               msg :to "felixschlitter@gmail.com")))
-          :vars '( ( user-mail-address      . "felixschlitter@gmail.com"  )
-                   ( user-full-name         . "Felix Schlitter" )
-                   ( mu4e-sent-folder       . "/gmail/Sent" )
-                   ( mu4e-drafts-folder     . "/gmail/Drafts" )
-                   ( mu4e-trash-folder      . "/gmail/Trash" )
-                   ( mu4e-refile-folder     . "/gmail/Archive" )
-                   ( smtpmail-smtp-user     . "felixschlitter@gmail.com" )
-                   ( smtpmail-smtp-server   . "smtp.gmail.com" )
-                   ( smtpmail-smtp-service  . 587 )
-                   ( send-mail-function     . 'smtpmail-send-it )
-                   ( mu4e-compose-signature . nil )))
-       ,(make-mu4e-context
-          :name "Fastmail"
-          :match-func
-          (lambda (msg)
-            (when msg
-              (mu4e-message-contact-field-matches
-               msg :to "felixschlitter@fastmail.com")))
-          :vars '( ( user-mail-address       . "felixschlitter@fastmail.com" )
-                   ( user-full-name          . "Felix Schlitter" )
-                   ( mu4e-sent-folder        . "/fastmail/Sent" )
-                   ( mu4e-drafts-folder      . "/fastmail/Drafts" )
-                   ( mu4e-trash-folder       . "/fastmail/Trash" )
-                   ( mu4e-refile-folder      . "/fastmail/Archive" )
-                   ( smtpmail-smtp-user      . "felixschlitter@fastmail.com" )
-                   ( smtpmail-smtp-server    . "smtp.fastmail.com" )
-                   ( smtpmail-smtp-service   . 587 )
-                   ( send-mail-function      . 'smtpmail-send-it )
-                   ( mu4e-compose-signature  . nil )))))
+(defun setup-mu4e ()
+  (require 'mu4e)
+  (setq
+   mu4e-maildir "~/mail"
+   mu4e-update-interval 10
+   mu4e-change-filenames-when-moving t
+   mu4e-contexts
+   `( ,(make-mu4e-context
+        :name "Gmail"
+        :match-func
+        (lambda (msg)
+          (when msg
+            (mu4e-message-contact-field-matches
+             msg :to "felixschlitter@gmail.com")))
+        :vars '( ( user-mail-address      . "felixschlitter@gmail.com"  )
+                 ( user-full-name         . "Felix Schlitter" )
+                 ( mu4e-sent-folder       . "/gmail/Sent" )
+                 ( mu4e-drafts-folder     . "/gmail/Drafts" )
+                 ( mu4e-trash-folder      . "/gmail/Trash" )
+                 ( mu4e-refile-folder     . "/gmail/Archive" )
+                 ( smtpmail-smtp-user     . "felixschlitter@gmail.com" )
+                 ( smtpmail-smtp-server   . "smtp.gmail.com" )
+                 ( smtpmail-smtp-service  . 587 )
+                 ( send-mail-function     . 'smtpmail-send-it )
+                 ( mu4e-compose-signature . nil )))
+      ,(make-mu4e-context
+        :name "Fastmail"
+        :match-func
+        (lambda (msg)
+          (when msg
+            (mu4e-message-contact-field-matches
+             msg :to "felixschlitter@fastmail.com")))
+        :vars '( ( user-mail-address       . "felixschlitter@fastmail.com" )
+                 ( user-full-name          . "Felix Schlitter" )
+                 ( mu4e-sent-folder        . "/fastmail/Sent" )
+                 ( mu4e-drafts-folder      . "/fastmail/Drafts" )
+                 ( mu4e-trash-folder       . "/fastmail/Trash" )
+                 ( mu4e-refile-folder      . "/fastmail/Archive" )
+                 ( smtpmail-smtp-user      . "felixschlitter@fastmail.com" )
+                 ( smtpmail-smtp-server    . "smtp.fastmail.com" )
+                 ( smtpmail-smtp-service   . 587 )
+                 ( send-mail-function      . 'smtpmail-send-it )
+                 ( mu4e-compose-signature  . nil )))))
+
+(if (file-exists-p "/usr/local/share/emacs/site-lisp/mu4e")
+    (progn
+      (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+      (setup-mu4e)))
 
 ;; mu4e alerts
 (use-package mu4e-alert
