@@ -529,9 +529,11 @@
 
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 (require 'mu4e)
-(setq mu4e-maildir "~/mail")
-(setq mu4e-update-interval 1000)
-(setq mu4e-contexts
+(setq
+ mu4e-maildir "~/mail"
+ mu4e-update-interval 10
+ mu4e-change-filenames-when-moving t
+ mu4e-contexts
     `( ,(make-mu4e-context
           :name "Gmail"
           :match-func
@@ -582,6 +584,7 @@
   :ensure t
   :requires evil
   :config
+  (evil-collection-term-setup)
   (evil-collection-mu4e-setup))
 
 ;; -----------------------------------------------------------------------------
@@ -668,6 +671,7 @@
 
 (use-package lsp-rust
     :after lsp-mode)
+
 (use-package intero
   :ensure t
   :config
