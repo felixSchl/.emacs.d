@@ -149,6 +149,31 @@
   :ensure t
   :config
   (progn
+    (setq org-directory "~/org"
+          org-cycle-include-plain-lists 'integrate
+          org-cycle-emulate-tab nil
+          org-agenda-files
+            '("~/org/inbox.org"
+              "~/org/gtd.org"
+              "~/org/tickler.org")
+          org-default-notes-file "~/org/inbox.org"
+          org-agenda-custom-commands
+          '(("o" "At the office" tags-todo "@office"
+             ((org-agenda-overriding-header "Office")))
+            ("h" "At home" tags-todo "@home"
+             ((org-agenda-overriding-header "Home"))))
+          org-capture-templates
+            '(("i" "Inbox" entry
+               (file+headline "~/org/inbox.org" "Inbox")
+               "* TODO %i%?")
+              ("t" "Tickler" entry
+               (file+headline "~/org/tickler.org" "Tickler")
+               "* %i%? \n %U")))
+
+
+    (global-set-key (kbd "C-c a") 'org-agenda)
+    (global-set-key (kbd "C-c c") 'org-capture)
+
     ;; Prevent insertion of leading whitespace when hitting 'o' on a heading in
     ;; org-mode.
     ;; See: https://github.com/syl20bnr/spacemacs/issues/11204
