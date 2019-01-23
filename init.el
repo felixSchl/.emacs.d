@@ -554,9 +554,19 @@
 
 (defun setup-mu4e ()
   (require 'mu4e)
+  (add-hook 'mu4e-view-mode-hook #'visual-line-mode)
   (setq
+   mu4e-compose-dont-reply-to-self t
    mu4e-maildir "~/mail"
-   mu4e-update-interval 10
+   mu4e-html2text-command "html2markdown"
+   mu4e-headers-show-threads t
+   mu4e-update-interval 100
+   mu4e-hide-index-messages t
+   mu4e-user-mail-address-list
+   '("felixschlitter@gmail.com" "felixschlitter@fastmail.com")
+   mu4e-sent-messages-behavior 'sent
+   message-send-mail-function 'smtpmail-send-it
+   mu4e-get-mail-command "mbsync gmail-inbox gmail-drafts fastmail-inbox fastmail-drafts"
    mu4e-change-filenames-when-moving t
    mu4e-contexts
    `( ,(make-mu4e-context
@@ -575,7 +585,6 @@
                  ( smtpmail-smtp-user     . "felixschlitter@gmail.com" )
                  ( smtpmail-smtp-server   . "smtp.gmail.com" )
                  ( smtpmail-smtp-service  . 587 )
-                 ( send-mail-function     . 'smtpmail-send-it )
                  ( mu4e-compose-signature . nil )))
       ,(make-mu4e-context
         :name "Fastmail"
@@ -593,8 +602,7 @@
                  ( smtpmail-smtp-user      . "felixschlitter@fastmail.com" )
                  ( smtpmail-smtp-server    . "smtp.fastmail.com" )
                  ( smtpmail-smtp-service   . 587 )
-                 ( send-mail-function      . 'smtpmail-send-it )
-                 ( mu4e-compose-signature  . nil )))))
+                 ( mu4e-compose-signature  . nil ))))))
 
 (if (file-exists-p "/usr/local/share/emacs/site-lisp/mu4e")
     (progn
