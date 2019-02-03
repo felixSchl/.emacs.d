@@ -152,9 +152,10 @@
     (setq org-directory "~/org"
           org-cycle-include-plain-lists 'integrate
           org-cycle-emulate-tab nil
+          org-agenda-include-diary t
+          org-agenda-span 10
           org-agenda-files
             '("~/org/inbox.org"
-              "~/org/gtd.org"
               "~/org/tickler.org")
           org-default-notes-file "~/org/inbox.org"
           org-agenda-custom-commands
@@ -170,7 +171,10 @@
                (file+headline "~/org/tickler.org" "Tickler")
                "* %i%? \n %U")))
 
+    ;; diary mode
+    (setq diary-file "~/org/diary")
 
+    (global-set-key (kbd "C-c l") 'org-store-link)
     (global-set-key (kbd "C-c a") 'org-agenda)
     (global-set-key (kbd "C-c c") 'org-capture)
 
