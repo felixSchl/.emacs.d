@@ -759,3 +759,26 @@
           (lambda ()
             (setq indent-tabs-mode t)))
 
+; ------------------------------------------------------------------------------
+; Holidays
+; ------------------------------------------------------------------------------
+(eval-when-compile
+  (require 'calendar)
+  (require 'holidays))
+
+;; Updated for: 2019
+(defvar holiday-nz-holidays
+  '((holiday-fixed 1 1 "New Year's Day")
+    (holiday-fixed  1  1 "New Year's Day")
+    (holiday-fixed  1  2 "Day after New Year's Day")
+    (holiday-fixed  2  6 "Waitangi Day")
+    (holiday-fixed  4 19 "Good Friday")
+    (holiday-fixed  4 22 "Easter Monday")
+    (holiday-fixed  4 25 "ANZAC Day")
+    (holiday-fixed  6  3 "Queen's Birthday")
+    (holiday-fixed 10 28 "Labour Day")
+    (holiday-fixed 12 25 "Christmas Day")
+    (holiday-fixed 12 26 "Boxing Day"))
+    "New Zealand holidays.")
+
+(setq calendar-holidays holiday-nz-holidays)
