@@ -147,17 +147,19 @@
 (use-package org
   :mode (("\\.org$" . org-mode))
   :ensure t
+  :pin org
   :config
   (progn
     (setq org-directory "~/org"
           org-cycle-include-plain-lists 'integrate
           org-cycle-emulate-tab nil
-          org-agenda-include-diary t
           org-agenda-span 10
           org-agenda-files
-            '("~/org/inbox.org"
-              "~/org/tickler.org")
-          org-default-notes-file "~/org/inbox.org"
+            '("~/org/gtd.org"
+              "~/org/tickler.org"
+              "~/org/journal.org"
+              "~/org/sylo.org")
+          org-default-notes-file "~/org/gtd.org"
           org-agenda-custom-commands
           '(("o" "At the office" tags-todo "@office"
              ((org-agenda-overriding-header "Office")))
@@ -165,14 +167,11 @@
              ((org-agenda-overriding-header "Home"))))
           org-capture-templates
             '(("i" "Inbox" entry
-               (file+headline "~/org/inbox.org" "Inbox")
+               (file+headline "~/org/gtd.org" "Inbox")
                "* TODO %i%?")
               ("t" "Tickler" entry
                (file+headline "~/org/tickler.org" "Tickler")
                "* %i%? \n %U")))
-
-    ;; diary mode
-    (setq diary-file "~/org/diary")
 
     (global-set-key (kbd "C-c l") 'org-store-link)
     (global-set-key (kbd "C-c a") 'org-agenda)
