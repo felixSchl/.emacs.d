@@ -634,7 +634,69 @@
 
 ;; asciidoc
 (use-package adoc-mode
-  :ensure t)
+  :ensure t
+  :config
+  (progn
+    (add-to-list 'auto-mode-alist (cons "\\.adoc\\'" 'adoc-mode))
+    (defun my-adoc-mode-hook ()
+      ;; (buffer-face-mode t)
+
+      (flyspell-mode)
+
+      (face-remap-add-relative
+       'markup-title-1-face
+       `(:foreground ,(face-foreground 'org-level-1)))
+
+      (face-remap-add-relative
+       'markup-title-2-face
+       `(:foreground ,(face-foreground 'org-level-2)))
+
+      (face-remap-add-relative
+       'markup-title-3-face
+       `(:foreground ,(face-foreground 'org-level-3)))
+
+      (face-remap-add-relative
+       'markup-title-4-face
+       `(:foreground ,(face-foreground 'org-level-4)))
+
+      (face-remap-add-relative
+       'markup-meta-hide-face
+       `(:foreground ,(face-foreground 'markup-meta-face)))
+      (face-remap-add-relative
+       'markup-table-face
+       `(:foreground ,(face-foreground 'markup-meta-face)
+         :background ,(face-background 'default)))
+      (face-remap-add-relative
+        'markup-anchor-face
+        '(:overline nil))
+      (face-remap-add-relative
+       'markup-list-face
+       `(:background ,(face-background 'default)
+         :foreground ,(face-foreground 'markup-meta-face))))
+
+    (add-hook 'adoc-mode-hook my-adoc-mode-hook)
+    (evil-define-key 'normal adoc-mode-map
+      (kbd "<backtab>") 'outline-show-all
+      (kbd "<tab>") 'outline-toggle-children
+      "zB" 'outline-hide-body
+      "zb" 'outline-hide-entry
+      "ze" 'outline-show-entry
+      "zl" 'outline-hide-leaves
+      "zK" 'outline-show-branches
+      "zk" 'outline-show-children
+      "zp" 'outline-hide-other
+      "[" 'outline-previous-visible-heading
+      "]" 'outline-next-visible-heading
+      (kbd "C-k") 'outline-backward-same-level
+      (kbd "C-j") 'outline-forward-same-level
+      "gk" 'outline-backward-same-level
+      "gj" 'outline-forward-same-level
+      "^" 'outline-up-heading
+      (kbd "M-h") 'outline-promote
+      (kbd "M-j") 'outline-move-subtree-down
+      (kbd "M-k") 'outline-move-subtree-up
+      (kbd "M-l") 'outline-demote
+      (kbd "M-<return>") 'outline-insert-heading)))
 
 ;; C
 (add-hook
