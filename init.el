@@ -684,7 +684,20 @@
 (add-hook 'taskjuggler-mode-hook 'my-task-juggler-mode-hook)
 
 ;; -----------------------------------------------------------------------------
-;; Language / Framework support ------------------------------------------------
+;; Extras
+;; -----------------------------------------------------------------------------
+
+(defun pin-buffer ()
+  "Pin buffer to current window."
+  (interactive)
+  (message
+   (if (let (window (get-buffer-window (current-buffer)))
+         (set-window-dedicated-p window (not (window-dedicated-p window))))
+       "pinned buffer" "un-pinned buffer")
+   ))
+
+;; -----------------------------------------------------------------------------
+;; Language / Framework support-------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
 ;; PostgreSQL
