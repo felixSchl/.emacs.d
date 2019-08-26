@@ -326,6 +326,7 @@ Use this with 'eog' to get live reload."
 (use-package evil
   :ensure t
   :init
+   (setq evil-respect-visual-line-mode t)
    (setq evil-want-C-i-jump t)
    (setq evil-want-C-u-scroll t)
   :config
