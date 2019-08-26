@@ -778,7 +778,7 @@ Use this with 'eog' to get live reload."
        `(:background ,(face-background 'default)
          :foreground ,(face-foreground 'markup-meta-face))))
 
-    (add-hook 'adoc-mode-hook my-adoc-mode-hook)
+    (add-hook 'adoc-mode-hook 'my-adoc-mode-hook)
     (evil-define-key 'normal adoc-mode-map
       (kbd "<backtab>") 'outline-show-all
       (kbd "<tab>") 'outline-toggle-children
