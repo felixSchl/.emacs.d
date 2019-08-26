@@ -202,6 +202,25 @@
 ;; Configure Packages ----------------------------------------------------------
 ;; -----------------------------------------------------------------------------
 
+(use-package graphviz-dot-mode
+  :ensure t
+  :config
+  (progn
+    (defun my-graphviz-dot-preview ()
+      "Regenerate graphviz image.
+The image file name is derived from the name of the dot file.
+Use this with 'eog' to get live reload."
+      (interactive)
+      (save-buffer)
+      (let ((windows (window-list))
+            (f-name (graphviz-output-file-name (buffer-file-name)))
+            (warn-msg (string-trim (shell-command-to-string compile-command))))
+        (if (string-match-p "^Warning: .+ line \\([0-9]+\\)" warn-msg)
+            (message warn-msg))))
+    (defun my-graphviz-dot-mode-hook ()
+      (add-hook 'after-save-hook 'my-graphviz-dot-preview))
+    (add-hook 'graphviz-dot-mode-hook 'my-graphviz-dot-mode-hook)))
+
 ;; Integrate with `keychain` utility
 (use-package keychain-environment
   :ensure t)
