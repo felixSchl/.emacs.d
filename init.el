@@ -859,6 +859,12 @@ Use this with 'eog' to get live reload."
 (use-package dockerfile-mode
   :ensure t)
 
+;; Elm
+(use-package elm-mode
+  :ensure t
+  :config
+  (elm-format-on-save-mode t))
+
 ;; Haskell
 (use-package haskell-mode
   :ensure t
