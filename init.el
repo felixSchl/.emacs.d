@@ -13,6 +13,8 @@
                          ("org" . "https://orgmode.org/elpa/")))
 (package-initialize)
 
+(add-to-list 'load-path "~/.emacs.d/vendor")
+
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -107,7 +109,6 @@
   (show-paren-mode t)
   (set-fill-column 80)
   (abbrev-mode t)
-  (linum-mode t)
   (abbrev-mode t)
   (fci-mode t)
   (setq indent-tabs-mode nil)
@@ -417,6 +418,7 @@
   :init
   (setq company-selection-wrap-around t)
   (setq company-show-numbers t)
+  (setq company-dabbrev-downcase nil)
   (setq company-minimum-prefix-length 2)
 
   :config
@@ -557,7 +559,7 @@
 
 (defun setup-mu4e ()
   (require 'mu4e)
-  (add-hook 'mu4e-view-mode-hook #'visual-line-mode)
+  (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
   (setq
    mu4e-compose-dont-reply-to-self t
    mu4e-maildir "~/mail"
@@ -605,7 +607,9 @@
                  ( smtpmail-smtp-user      . "felixschlitter@fastmail.com" )
                  ( smtpmail-smtp-server    . "smtp.fastmail.com" )
                  ( smtpmail-smtp-service   . 587 )
-                 ( mu4e-compose-signature  . nil ))))))
+                 ( mu4e-compose-signature  . nil )))))
+  (add-to-list 'mu4e-view-actions
+               '("ViewInBrowser" . mu4e-action-view-in-browser) t))
 
 (if (file-exists-p "/usr/local/share/emacs/site-lisp/mu4e")
     (progn
@@ -625,12 +629,79 @@
   :ensure t
   :requires evil
   :config
+  (evil-collection-calendar-setup)
   (evil-collection-term-setup)
+  (setq evil-collection-outline-bind-tab-p t)
+  (evil-collection-outline-setup)
+  (evil-collection-magit-setup)
   (evil-collection-mu4e-setup))
 
 ;; -----------------------------------------------------------------------------
-;; Language / Framework support-------------------------------------------------
+;; Vendored packages
 ;; -----------------------------------------------------------------------------
+
+(require 'taskjuggler-mode)
+
+;; (TODO) generalize this, currently the time format used is specific to tj3.
+(defun calendar-insert-date ()
+  "Capture the date at point, exit the Calendar, insert the date."
+  (interactive)
+  (seq-let (month day year) (save-match-data (calendar-cursor-to-date))
+    (calendar-exit)
+    (insert (format "%d-%02d-%02d" year month day))))
+(evil-define-key 'normal calendar-mode-map
+  (kbd "RET") 'calendar-insert-date)
+
+(defun my-task-juggler-mode-hook ()
+  (interactive)
+  (hs-minor-mode t)
+
+  (evil-define-key 'insert taskjuggler-mode-map
+    (kbd "C-c n") (lambda ()
+                    (interactive)
+                    (let ((stamp (format-time-string "%Y-%m-%d-%H:%M" (current-time))))
+                      (insert stamp))))
+
+  (evil-define-key 'normal taskjuggler-mode-map
+    (kbd ", v") (lambda ()
+                  (interactive)
+                  (let ((path (taskjuggler-current-context-path)))
+                    (kill-new path)
+                    (message path)))
+    (kbd ", n") (lambda ()
+                  (interactive)
+                  (let ((stamp (format-time-string "%Y-%m-%d-%H:%M" (current-time))))
+                    (insert stamp)))
+    (kbd "<backtab>") 'hs-hide-level
+    (kbd "<tab>") (lambda ()
+                    (interactive)
+                    (let ((evil-cross-lines 0))
+                         (evil-beginning-of-line))
+                    (ignore-errors
+                      (evil-find-char 1 ?{))
+                    (hs-toggle-hiding))))
+
+(add-hook 'taskjuggler-mode-hook 'my-task-juggler-mode-hook)
+
+;; -----------------------------------------------------------------------------
+;; Language / Framework support ------------------------------------------------
+;; -----------------------------------------------------------------------------
+
+;; PostgreSQL
+(defun pgsql-scratch ()
+  (interactive)
+  (switch-to-buffer "*pgsql-scratch*")
+  (sql-mode)
+  (sql-set-product "postgres")
+  (sql-set-sqli-buffer))
+
+;; MySQL
+(defun mysql-scratch ()
+  (interactive)
+  (switch-to-buffer "*mysql-scratch*")
+  (sql-mode)
+  (sql-set-product "mysql")
+  (sql-set-sqli-buffer))
 
 ;; asciidoc
 (use-package adoc-mode
@@ -699,14 +770,16 @@
       (kbd "M-<return>") 'outline-insert-heading)))
 
 ;; C
-(add-hook
- 'c-mode-common-hook
- (progn
+(defun --c-mode-hook ()
    (setq
     backward-delete-char-untabify-method nil
     c-basic-offset 8
     tab-width 8
-    indent-tabs-mode t)))
+    indent-tabs-mode t))
+
+(add-hook
+ 'c-mode-common-hook
+ '--c-mode-hook)
 
 ;; JSON
 (use-package json-mode
@@ -759,6 +832,7 @@
   :config
   (add-hook 'haskell-mode-hook
             (lambda ()
+              (setq haskell-process-type 'stack-ghci)
               (setq evil-shift-width 2))))
 
 ;; Language server protocol
@@ -829,8 +903,7 @@
 
 ;; Updated for: 2019
 (defvar holiday-nz-holidays
-  '((holiday-fixed 1 1 "New Year's Day")
-    (holiday-fixed  1  1 "New Year's Day")
+  '((holiday-fixed  1  1 "New Year's Day")
     (holiday-fixed  1  2 "Day after New Year's Day")
     (holiday-fixed  2  6 "Waitangi Day")
     (holiday-fixed  4 19 "Good Friday")
