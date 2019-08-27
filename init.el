@@ -672,10 +672,27 @@ Use this with 'eog' to get live reload."
 (evil-define-key 'normal calendar-mode-map
   (kbd "RET") 'calendar-insert-date)
 
+(defun my-taskjuggler-helm-tasks  ()
+  (interactive)
+  (let ((task-tree (taskjuggler-parser nil 'tasktree nil)))
+    (helm :sources
+            (helm-build-in-buffer-source "taskjuggler-tasks"
+              :action (lambda (line)
+                        (pcase (split-string line ":")
+                          (`(,n ,_)
+                           (with-no-warnings
+                             (goto-line (string-to-number n))))))
+              :data (seq-filter 'identity
+                                (mapcar (lambda(item)
+                                          (pcase item
+                                            (`(,path ,_ ,_ ,name ,line)
+                                             (concat (number-to-string line) ": " path " " name))))
+                                        task-tree))))))
+
 (defun my-task-juggler-mode-hook ()
   (interactive)
   (hs-minor-mode t)
-
+  (setq-local hs-allow-nesting 1)
   (evil-define-key 'insert taskjuggler-mode-map
     (kbd "C-c n") (lambda ()
                     (interactive)
@@ -690,8 +707,8 @@ Use this with 'eog' to get live reload."
                     (message path)))
     (kbd ", n") (lambda ()
                   (interactive)
-                  (let ((stamp (format-time-string "%Y-%m-%d-%H:%M" (current-time))))
-                    (insert stamp)))
+                  (let ((stamp (format-time-string "%Y-%m-%d-%H:%M" (current-time))))))
+    (kbd "C-c C-j") 'my-taskjuggler-helm-tasks
     (kbd "<backtab>") 'hs-hide-level
     (kbd "<tab>") (lambda ()
                     (interactive)
@@ -702,6 +719,8 @@ Use this with 'eog' to get live reload."
                     (hs-toggle-hiding))))
 
 (add-hook 'taskjuggler-mode-hook 'my-task-juggler-mode-hook)
+(add-to-list 'hs-special-modes-alist
+             '(taskjuggler-mode "{" "}" "/[*/]" nil))
 
 ;; -----------------------------------------------------------------------------
 ;; Extras

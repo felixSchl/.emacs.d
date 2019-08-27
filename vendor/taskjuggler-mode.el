@@ -355,7 +355,8 @@ nil           return task tree
                 (cons (list (taskjuggler-make-path path)
                             task-hierarchy
                             (match-string-no-properties 1)
-                            (match-string-no-properties 2))
+                            (match-string-no-properties 2)
+                            (line-number-at-pos))
                       task-tree))
           (goto-char (match-end 0))
           (forward-char -2))
