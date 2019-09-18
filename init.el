@@ -29,6 +29,7 @@
 
 (use-package diminish)
 
+(setq evil-want-keybinding nil)
 (line-number-mode)
 (column-number-mode)
 (setq inhibit-splash-screen t)
@@ -476,14 +477,6 @@ Use this with 'eog' to get live reload."
     (setq diff-hl-side 'left)
     (diff-hl-margin-mode)))
 
-;; Highlight hex-color literals
-(use-package rainbow-mode
-  :config
-  (progn
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                (rainbow-mode t)))))
-
 ;; Helm - incremental completion framework
 (use-package helm
   :ensure t
@@ -515,6 +508,7 @@ Use this with 'eog' to get live reload."
   :config
   (projectile-mode t)
   (setq projectile-switch-project-action 'projectile-dired)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (diminish 'projectile-mode))
 
 ;; Flx-ido - Proper fuzzy matching for ido-mode
@@ -629,20 +623,21 @@ Use this with 'eog' to get live reload."
                  ( smtpmail-smtp-service   . 587 )
                  ( mu4e-compose-signature  . nil )))))
   (add-to-list 'mu4e-view-actions
-               '("ViewInBrowser" . mu4e-action-view-in-browser) t))
+               '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+  ;; mu4e alerts
+  (use-package mu4e-alert
+    :ensure t
+    :config
+    (mu4e-alert-enable-mode-line-display)
+    (setq mu4e-alert-interesting-mail-query
+          "(maildir:/gmail/Inbox OR maildir:/fastmail/Inbox) AND flag:unread"))
+  (setq my-mu4e-has-loaded 1))
 
+(setq my-mu4e-has-loaded nil)
 (if (file-exists-p "/usr/local/share/emacs/site-lisp/mu4e")
     (progn
       (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
       (setup-mu4e)))
-
-;; mu4e alerts
-(use-package mu4e-alert
-  :ensure t
-  :config
-  (mu4e-alert-enable-mode-line-display)
-  (setq mu4e-alert-interesting-mail-query
-        "(maildir:/gmail/Inbox OR maildir:/fastmail/Inbox) AND flag:unread"))
 
 ;; A set of useful evil bindings
 (use-package evil-collection
@@ -654,7 +649,8 @@ Use this with 'eog' to get live reload."
   (setq evil-collection-outline-bind-tab-p t)
   (evil-collection-outline-setup)
   (evil-collection-magit-setup)
-  (evil-collection-mu4e-setup))
+  (if my-mu4e-has-loaded
+    (evil-collection-mu4e-setup)))
 
 ;; -----------------------------------------------------------------------------
 ;; Vendored packages
@@ -893,11 +889,6 @@ Use this with 'eog' to get live reload."
               (setq haskell-process-type 'stack-ghci)
               (setq evil-shift-width 2))))
 
-;; Language server protocol
-(use-package lsp-mode
-    :init
-    (add-hook 'prog-mode-hook 'lsp-mode))
-
 ;; Rust
 (use-package rust-mode
     :mode "\\.rs\\'"
@@ -907,34 +898,39 @@ Use this with 'eog' to get live reload."
 (use-package lsp-rust
     :after lsp-mode)
 
+;; Haskell
+(defun my-haskell-mode-hook ()
+  (intero-mode t)
+  (define-key evil-normal-state-map "gd" 'intero-goto-definition))
+
 (use-package intero
   :ensure t
   :config
-  (add-hook 'haskell-mode-hook
-            (intero-mode t)
-            (define-key evil-normal-state-map "gd" 'intero-goto-definition)))
+  (add-hook 'haskell-mode-hook 'my-haskell-mode-hook))
 
 ;; Purescript
+(defun my-purescript-mode-hook ()
+  (turn-on-purescript-indentation)
+  (setq evil-shift-width 2))
+
 (use-package purescript-mode
   :ensure t
   :config
-  (add-hook 'purescript-mode-hook
-            (lambda ()
-              (turn-on-purescript-indentation)
-              (setq evil-shift-width 2))))
+  (add-hook 'purescript-mode-hook 'my-purescript-mode-hook))
+
+(defun my-psc-ide-hook ()
+  (setq psc-ide-use-npm-bin t)
+  (psc-ide-mode t)
+  (company-mode t)
+  (flycheck-mode t)
+  (turn-on-purescript-indentation)
+  (setq evil-shift-width 2)
+  (define-key evil-normal-state-map "gd" 'psc-ide-goto-definition))
 
 (use-package psc-ide
   :ensure t
   :config
-  (add-hook 'purescript-mode-hook
-            (lambda ()
-              (setq psc-ide-use-npm-bin t)
-              (psc-ide-mode t)
-              (company-mode t)
-              (flycheck-mode t)
-              (turn-on-purescript-indentation)
-              (setq evil-shift-width 2)
-              (define-key evil-normal-state-map "gd" 'psc-ide-goto-definition))))
+  (add-hook 'purescript-mode-hook 'my-psc-ide-hook))
 
 ;; Apple Swift
 (use-package swift-mode
@@ -972,5 +968,18 @@ Use this with 'eog' to get live reload."
     (holiday-fixed 12 25 "Christmas Day")
     (holiday-fixed 12 26 "Boxing Day"))
     "New Zealand holidays.")
-
 (setq calendar-holidays holiday-nz-holidays)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (rainbow-mode yaml-mode xclip ws-butler use-package tide swift-mode spaceline smooth-scrolling purescript-mode psc-ide projectile popwin nlinum multi-term mu4e-alert monokai-theme markdown-mode magit keychain-environment key-chord json-mode intero ido-vertical-mode helm-ls-git helm-git-grep helm-flx graphviz-dot-mode go-mode git-link flycheck-swift flx-ido fill-column-indicator eyebrowse exec-path-from-shell evil-visualstar evil-surround evil-org evil-commentary evil-collection elm-mode dockerfile-mode dired-subtree dired-filter diminish diff-hl cmake-mode adoc-mode ace-window))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
