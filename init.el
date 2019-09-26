@@ -105,7 +105,8 @@
   (save-buffer))
 (global-set-key (kbd "C-x C-s") 'save-buffer-always)
 
-(defun --prog-mode-hook ()
+(defun my-prog-mode-hook ()
+  (interactive)
   (setq indent-tabs-mode nil)
   (show-paren-mode t)
   (set-fill-column 80)
@@ -114,7 +115,7 @@
   (fci-mode t)
   (setq indent-tabs-mode nil)
   (hl-line-mode t))
-(add-hook 'prog-mode-hook '--prog-mode-hook)
+(add-hook 'prog-mode-hook 'my-prog-mode-hook)
 
 ;; Fix fci-mode when used in conjunction with company-mode.
 ;; https://github.com/company-mode/company-mode/issues/180#issuecomment-55047120
@@ -751,6 +752,16 @@ Use this with 'eog' to get live reload."
   (sql-set-product "mysql")
   (sql-set-sqli-buffer))
 
+;; dhall
+(use-package dhall-mode
+  :ensure t
+  :config
+  (progn
+    (defun my-dhall-mode-hook ()
+      (interactive)
+      (setq dhall-format-arguments '("--ascii")))
+    (add-hook 'dhall-mode-hook 'my-dhall-mode-hook)))
+
 ;; asciidoc
 (use-package adoc-mode
   :ensure t
@@ -818,16 +829,17 @@ Use this with 'eog' to get live reload."
       (kbd "M-<return>") 'outline-insert-heading)))
 
 ;; C
-(defun --c-mode-hook ()
-   (setq
-    backward-delete-char-untabify-method nil
-    c-basic-offset 8
-    tab-width 8
-    indent-tabs-mode t))
+(defun my-c-mode-hook ()
+  (interactive)
+  (setq
+   backward-delete-char-untabify-method nil
+   c-basic-offset 8
+   tab-width 8
+   indent-tabs-mode t)
+  (evil-define-key 'normal c-mode-map
+    "gd" 'xref-find-definitions))
 
-(add-hook
- 'c-mode-common-hook
- '--c-mode-hook)
+(add-hook 'c-mode-hook 'my-c-mode-hook)
 
 ;; JSON
 (use-package json-mode
@@ -868,7 +880,8 @@ Use this with 'eog' to get live reload."
   (add-hook 'typescript-mode-hook
           (lambda ()
             (tide-setup)
-            (define-key evil-normal-state-map "gd" 'tide-jump-to-definition))))
+            (evil-define-key 'normal tide-mode-map
+              "gd" 'tide-jump-to-definition))))
 
 ;; Dockerfiles
 (use-package dockerfile-mode
