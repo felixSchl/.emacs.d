@@ -18,10 +18,11 @@
 (setq exec-path
       '("~/.local/bin"
         "~/bin"
+        "~/.ghcup/bin"
+        "~/.nvm/versions/node/v14.13.1/bin"
         "/bin"
         "/usr/bin"
-        "/usr/local/bin"
-        "~/.ghcup/bin"))
+        "/usr/local/bin"))
 
 
 (eval-when-compile
@@ -64,11 +65,8 @@ successful (or unnecessary) and nil if not."
 (with-eval-after-load 'display-fill-column-indicator ;; Emacs 27+ only
     (global-display-fill-column-indicator-mode))
 (my/require-softly 'display-fill-column-indicator)
-
-;; Configure Javascript
-(with-eval-after-load 'js
-  (custom-set-variables
-    (js-indent-level 2)))
+(with-eval-after-load 'ido
+  (ido-everywhere t))
 
 ;; OSX - Use `Command' key as `alt' key
 (setq
@@ -190,10 +188,10 @@ successful (or unnecessary) and nil if not."
   "Base configuration for 'prog-mode'."
   (setq indent-tabs-mode nil)
   (show-paren-mode t)
-  (flyspell-mode t)
   (set-fill-column 80)
   (abbrev-mode t)
-  (hl-line-mode t))
+  (hl-line-mode t)
+  (flyspell-prog-mode))
 (add-hook 'prog-mode-hook 'my/prog-mode-hook)
 
 ;; -----------------------------------------------------------------------------
@@ -212,11 +210,11 @@ successful (or unnecessary) and nil if not."
   (with-eval-after-load 'company
     (defvar-local company-fci-mode-on-p nil)
     (defun company-turn-off-fci (&rest ignore)
-        (when (boundp 'fci-mode)
+      (when (boundp 'fci-mode)
         (setq company-fci-mode-on-p fci-mode)
         (when fci-mode (fci-mode -1))))
     (defun company-maybe-turn-on-fci (&rest ignore)
-        (when company-fci-mode-on-p (fci-mode 1)))
+      (when company-fci-mode-on-p (fci-mode 1)))
     (add-hook 'company-completion-started-hook 'company-turn-off-fci)
     (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
     (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)))
@@ -249,7 +247,10 @@ successful (or unnecessary) and nil if not."
     (set-buffer-modified-p t)
     (save-buffer nil))
   (evil-mode t)
-  (add-hook 'after-save #'evil-normal-state)
+
+  ;; Drop into normal mode after saving file
+  (add-hook 'after-save-hook #'evil-normal-state)
+
   ;; Do not consider saving a buffer a repeatable action
   (evil-declare-not-repeat 'my/save-buffer)
 
@@ -464,20 +465,32 @@ successful (or unnecessary) and nil if not."
 ;; Helm - incremental completion framework
 (use-package helm
   :ensure t
-  :hook helm-mode
-  :diminish helm-mode
-  :config
+  :defer nil
   :custom
   ((helm-mode-fuzzy-match t)
    (helm-completion-in-region-fuzzy-match t))
-  :init
-  (global-set-key (kbd "M-x") 'helm-M-x)
-  (global-set-key (kbd "C-c f r") 'helm-recentf)
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  :bind
+    (("M-x"     . helm-M-x)
+     ("M-y"     . helm-show-kill-ring)
+     ("C-x b"   . helm-mini)
+     ("C-c f r" . helm-recentf)
+     ("C-x C-f" . helm-find-files)))
+
+(use-package helm-mode
+  :ensure nil ;; via `helm' package
+  :diminish helm-mode
   :config
-  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
-  (define-key helm-map (kbd "C-z")  'helm-select-action))
+  (bind-keys :map helm-map
+             ("<tab>" . helm-execute-persistent-action)
+             ("C-i"   . helm-execute-persistent-action)
+             ("C-z"   . helm-select-action)))
+
+(use-package helm-git-grep
+  :ensure t
+  :pin manual
+  :commands (helm-git-grep)
+  :after (helm-mode)
+  :bind ("C-c g f" . helm-git-grep))
 
 ;; Eyebrowse - Multiple window configurations
 (use-package eyebrowse
@@ -497,13 +510,6 @@ successful (or unnecessary) and nil if not."
     (define-key m (kbd "M-9") 'eyebrowse-switch-to-window-config-9)))
 
 ;; A better git-grep experience than the one built into helm
-(use-package helm-git-grep
-  :ensure t
-  :after helm
-  :config
-  (global-set-key (kbd "C-c g f") 'helm-git-grep)
-  (global-set-key (kbd "C-c C-f") 'helm-git-grep))
-
 ;; Whitespace butler - clean up whitespace
 (use-package ws-butler
   :ensure t
@@ -560,17 +566,24 @@ successful (or unnecessary) and nil if not."
 ; Language Support
 ; ------------------------------------------------------------------------------
 
+(use-package cmake-mode
+  :mode "\\CMakeLists.txt\\'"
+  :ensure t)
+
 (defun my/lsp-mode-hook ()
   "Custom LSP Mode Hook.")
 
 (use-package lsp-mode
   :ensure t
-  :commands (lsp-mode)
+  :commands (lsp-mode lsp-deferred)
   :init
-  (add-hook 'lsp-mode-hook 'my/lsp-mode-hook)
-  (add-hook 'prog-mode-hook 'lsp-mode))
+  (add-hook 'lsp-mode-hook 'my/lsp-mode-hook))
 
 (use-package lsp-ui
+  :after lsp-mode
+  :ensure t)
+
+(use-package lsp-java
   :after lsp-mode
   :ensure t)
 
@@ -593,7 +606,7 @@ successful (or unnecessary) and nil if not."
 ;; Typescript language support
 (use-package typescript-mode
   :ensure t
-  :mode ("\\.ts\\'" "\\.tsx\\'")
+  :mode ("\\.ts\\'" "\\.tsx\\'" "\\.js\\'" "\\.jsx'")
   :init
   (setq
    typescript-indent-level 2
@@ -621,7 +634,7 @@ successful (or unnecessary) and nil if not."
     (setq rust-format-on-save t)))
 
 (use-package lsp-rust
-    :after lsp-mode)
+  :after lsp-mode)
 
 ;; Dockerfile support
 (use-package dockerfile-mode
@@ -835,7 +848,7 @@ Use this with 'eog' to get live reload."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(use-package ace-window))
+ '(package-selected-packages '(cmake-mode lsp-java use-package ace-window))
  '(safe-local-variable-values '((web-mode-engines-alist ("django" . "\\.html\\'")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
