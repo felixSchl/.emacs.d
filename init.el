@@ -92,6 +92,19 @@ successful (or unnecessary) and nil if not."
 (with-eval-after-load 'term-mode
   (add-hook 'term-mode-hook 'my/stock-term-hook))
 
+;; Compile-mode
+(require 'compile)
+(setq
+ compilation-scroll-output t)
+
+;; Colored output in compile-mode
+(require 'ansi-color)
+(defun my/colorize-compilation-buffer ()
+  "Colorize `comilation-mode' buffers."
+  (when (eq major-mode 'compilation-mode)
+    (ansi-color-apply-on-region compilation-filter-start (point-max))))
+(add-hook 'compilation-filter-hook 'my/colorize-compilation-buffer)
+
 ;; Always save the buffer (even if emacs thinks there are no changes)
 (defun save-buffer-always ()
   "Save the buffer even if it is not modified."
@@ -121,7 +134,7 @@ successful (or unnecessary) and nil if not."
   ;; Auto-revert dired buffers when files change on disk
   (auto-revert-mode t)
   (dired-omit-mode t)
-  (setq dired-omit-verbose 0)
+  (setq dired-omit-verbose t)
 
   ;; More evil support
   (evil-make-overriding-map dired-mode-map 'normal t)
@@ -139,9 +152,8 @@ successful (or unnecessary) and nil if not."
 ;; -----------------------------------------------------------------------------
 (defun my/sh-mode-hook ()
   "Custom `sh-mode' Hook."
-  (setq-local
-   indent-tabs-mode t
-   tab-width 4))
+  (setq-local indent-tabs-mode t)
+  (setq-local tab-width 4))
 (add-hook 'sh-mode-hook 'my/sh-mode-hook)
 
 ;; -----------------------------------------------------------------------------
@@ -441,7 +453,15 @@ successful (or unnecessary) and nil if not."
   :init
   (setq company-selection-wrap-around t
         company-show-numbers t
-        company-minimum-prefix-length 2)
+        company-minimum-prefix-length 2
+        company-idle-delay 0
+        company-require-match 'never
+        company-dabbrev-code-everywhere t
+        company-dabbrev-code-ignore-case t
+        company-dabbrev-code-other-buffers t
+        company-dabbrev-ignore-case t
+        company-dabbrev-downcase nil
+        company-dabbrev-other-buffers t)
   :config
   (global-company-mode)
 
@@ -610,7 +630,10 @@ successful (or unnecessary) and nil if not."
   :init
   (setq
    typescript-indent-level 2
-   typescript-auto-indent-flag 0))
+   typescript-auto-indent-flag 0)
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+  (flycheck-add-mode 'typescript-tslint 'web-mode))
+
 
 ;; Typescript IDE
 (defun my/tide-hook ()
@@ -671,7 +694,7 @@ successful (or unnecessary) and nil if not."
   :hook (purescript-mode . my/purescript-mode-hook))
 
 ;; PureScript IDE tooling
-(defun my-psc-ide-hook ()
+(defun my/psc-ide-hook ()
   "Custom PSC IDE Hook."
   (psc-ide-mode t)
   (setq psc-ide-use-npm-bin t)
@@ -686,7 +709,7 @@ successful (or unnecessary) and nil if not."
 (use-package psc-ide
   :ensure t
   :commands (psc-ide-mode)
-  :init (add-hook 'purescript-mode-hook 'my-psc-ide-hook))
+  :init (add-hook 'purescript-mode-hook 'my/psc-ide-hook))
 
 ;; Haskell support
 (use-package haskell-mode
@@ -836,7 +859,7 @@ Use this with 'eog' to get live reload."
 (use-package graphviz-dot-mode
   :ensure t
   :config
-  (add-hook 'after-save-hook 'my-graphviz-dot-preview nil t))
+  (add-hook 'after-save-hook 'my/graphviz-dot-preview nil t))
 
 ; ------------------------------------------------------------------------------
 
