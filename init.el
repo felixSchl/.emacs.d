@@ -18,12 +18,14 @@
 (setq exec-path
       '("~/.local/bin"
         "~/bin"
+        "~/go/bin/"
         "~/.ghcup/bin"
         "~/.nvm/versions/node/v14.13.1/bin"
         "/bin"
         "/usr/bin"
+        "/usr/local/go/bin"
         "/usr/local/bin"))
-
+(setenv "PATH" (string-join exec-path ":"))
 
 (eval-when-compile
   (require 'use-package))
@@ -295,6 +297,15 @@ successful (or unnecessary) and nil if not."
   (setq magit-diff-paint-whitespace t
         magit-diff-highlight-trailing t))
 
+(defun my/add-node-modules-path ()
+  "Add node_modules/.bin to 'exec-path' when working with node projects."
+  (let ((root (projectile-project-root)))
+    (when root
+         (let ((bindir (expand-file-name "node_modules/.bin/" root)))
+           (when (file-directory-p bindir)
+             (make-local-variable 'exec-path)
+             (add-to-list 'exec-path bindir))))))
+
 ;; Projectile - Project interaction library
 (use-package projectile
   :ensure t
@@ -302,6 +313,8 @@ successful (or unnecessary) and nil if not."
   :delight '(:eval (concat " " (projectile-project-name)))
   :config
   (projectile-mode t)
+  (eval-after-load 'typescript
+    (add-hook 'typescript-mode-hook 'my/add-node-modules-path))
   (setq projectile-switch-project-action 'projectile-dired)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
@@ -566,6 +579,10 @@ successful (or unnecessary) and nil if not."
 ; Language Support
 ; ------------------------------------------------------------------------------
 
+(use-package kotlin-mode
+  :mode "\\.kt\\'"
+  :ensure t)
+
 (use-package cmake-mode
   :mode "\\CMakeLists.txt\\'"
   :ensure t)
@@ -757,29 +774,25 @@ successful (or unnecessary) and nil if not."
   :ensure t
   :pin org
   :config
-  (progn
-    (setq org-directory "~/org"
-          org-cycle-include-plain-lists 'integrate
-          org-cycle-emulate-tab nil
-          org-agenda-span 10
-          org-agenda-files
-            '("~/org/gtd.org"
-              "~/org/tickler.org"
-              "~/org/journal.org"
-              "~/org/sylo.org")
-          org-default-notes-file "~/org/gtd.org"
-          org-agenda-custom-commands
-          '(("o" "At the office" tags-todo "@office"
-             ((org-agenda-overriding-header "Office")))
-            ("h" "At home" tags-todo "@home"
-             ((org-agenda-overriding-header "Home"))))
-          org-capture-templates
-            '(("i" "Inbox" entry
-               (file+headline "~/org/gtd.org" "Inbox")
-               "* TODO %i%?")
-              ("t" "Tickler" entry
-               (file+headline "~/org/tickler.org" "Tickler")
-               "* %i%? \n %U")))
+  (setq org-directory "~/org"
+        org-cycle-include-plain-lists 'integrate
+        org-cycle-emulate-tab nil
+        org-agenda-span 10
+        org-agenda-files
+        '("~/org/gtd.org"
+          "~/org/tickler.org"
+          "~/org/journal.org"
+          "~/org/sylo.org")
+        org-default-notes-file "~/org/gtd.org"
+        org-agenda-custom-commands
+        '(("o" "At the office" tags-todo "@office"
+           ((org-agenda-overriding-header "Office")))
+          ("h" "At home" tags-todo "@home"
+           ((org-agenda-overriding-header "Home"))))
+        org-capture-templates
+        '(("i" "issue" entry
+           (file+olp+datetree "~/org/issue-tracker.org")
+           "* ONCE %?" :time-prompt t)))
 
     (global-set-key (kbd "C-c l") 'org-store-link)
     (global-set-key (kbd "C-c a") 'org-agenda)
@@ -848,8 +861,13 @@ Use this with 'eog' to get live reload."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(cmake-mode lsp-java use-package ace-window))
- '(safe-local-variable-values '((web-mode-engines-alist ("django" . "\\.html\\'")))))
+ '(package-selected-packages
+   (quote
+    (kotlin-mode cmake-mode lsp-java use-package ace-window)))
+ '(safe-local-variable-values
+   (quote
+    ((web-mode-engines-alist
+      ("django" . "\\.html\\'"))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
