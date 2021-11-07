@@ -7,8 +7,8 @@
 (setq
  package-enable-at-startup nil
  package-archives '(("elpa" . "http://elpa.gnu.org/packages/")
-                    ("emacs-pe" . "https://emacs-pe.github.io/packages/")
-                    ("marmalade" . "https://marmalade-repo.org/packages/")
+;                    ("emacs-pe" . "https://emacs-pe.github.io/packages/")
+;                   ("marmalade" . "https://marmalade-repo.org/packages/")
                     ("melpa" . "http://melpa.org/packages/")
                     ("org" . "https://orgmode.org/elpa/")))
 (package-initialize)
@@ -178,6 +178,7 @@ successful (or unnecessary) and nil if not."
    c-basic-offset 8
    tab-width 8
    indent-tabs-mode t)
+  (add-hook 'before-save-hook 'clang-format-buffer nil t)
   (with-eval-after-load 'evil
     (evil-define-key 'normal c-mode-map
       "gd" 'xref-find-definitions)))
@@ -199,6 +200,13 @@ successful (or unnecessary) and nil if not."
 ;; -----------------------------------------------------------------------------
 ;; packages
 ;; -----------------------------------------------------------------------------
+
+(use-package clang-format
+  :ensure t)
+
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode t))
 
 ;; Fill column indicator to visually see the fill column
 ;; Note: Only enabled for Emacs < 27. Emacs 27+ sports built-in support for this
@@ -288,6 +296,11 @@ successful (or unnecessary) and nil if not."
   :config
   (global-evil-surround-mode t))
 
+(defun my/magit-mode-hook ()
+  "Custom magit-mode hook."
+  (when (require 'helm nil 'noerror)
+    (helm-mode t)))
+
 ;; Emacs git frontned
 (use-package magit
   :ensure t
@@ -295,7 +308,9 @@ successful (or unnecessary) and nil if not."
   :init
   (global-set-key (kbd "C-x g") 'magit-status)
   (setq magit-diff-paint-whitespace t
-        magit-diff-highlight-trailing t))
+        magit-diff-highlight-trailing t)
+  :config
+  (add-hook 'magit-mode-hook 'my/magit-mode-hook))
 
 (defun my/add-node-modules-path ()
   "Add node_modules/.bin to 'exec-path' when working with node projects."
@@ -315,7 +330,10 @@ successful (or unnecessary) and nil if not."
   (projectile-mode t)
   (eval-after-load 'typescript
     (add-hook 'typescript-mode-hook 'my/add-node-modules-path))
-  (setq projectile-switch-project-action 'projectile-dired)
+  (setq projectile-switch-project-action 'projectile-dired
+        projectile-use-git-grep t)
+  ;; (with-eval-after-load 'helm
+  ;;   (global-set-key (kbd "C-c g f") 'helm-projectile-grep))
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
 ;; A set of useful evil bindings
@@ -332,7 +350,9 @@ successful (or unnecessary) and nil if not."
   (with-eval-after-load 'outline (evil-collection-outline-setup))
   (with-eval-after-load 'magit (evil-collection-magit-setup))
   (with-eval-after-load 'mu4e (evil-collection-mu4e-setup))
-  (with-eval-after-load 'xref (evil-collection-xref-setup)))
+  (with-eval-after-load 'flycheck (evil-collection-flycheck-setup))
+  (with-eval-after-load 'xref (evil-collection-xref-setup))
+  (with-eval-after-load 'tide (evil-collection-tide-setup)))
 
 ;; Evil commentary - Toggle comments
 (use-package evil-commentary
@@ -445,6 +465,11 @@ successful (or unnecessary) and nil if not."
   :ensure t
   :config (load-theme 'monokai t))
 
+(use-package irony
+  :ensure t
+  :config
+  (add-hook 'c-mode-common-hook 'irony-mode))
+
 ;; Company - Auto-completion
 (use-package company
   :ensure t
@@ -454,7 +479,7 @@ successful (or unnecessary) and nil if not."
   :init
   (setq company-selection-wrap-around t
         company-show-numbers t
-        company-minimum-prefix-length 2)
+        company-minimum-prefix-length 0)
   :config
   (global-company-mode)
 
@@ -462,10 +487,15 @@ successful (or unnecessary) and nil if not."
   (setq company-backends (remove 'company-files company-backends))
   (add-to-list 'company-backends 'company-files))
 
+(defun my/flycheck-error-list-mode-hook ()
+  "Custom *Flycheck Errors* buffer hook."
+  (visual-line-mode t))
+
 ;; Flycheck - on-the-fly syntax checking
 (use-package flycheck
   :ensure t
   :config
+  (add-hook 'flycheck-error-list-mode 'my/flycheck-error-list-mode-hook)
   (global-flycheck-mode t))
 
 ;; Terminal emulators inside emacs
@@ -479,15 +509,23 @@ successful (or unnecessary) and nil if not."
 (use-package helm
   :ensure t
   :defer nil
+  :after (projectile)
   :custom
   ((helm-mode-fuzzy-match t)
    (helm-completion-in-region-fuzzy-match t))
   :bind
-    (("M-x"     . helm-M-x)
-     ("M-y"     . helm-show-kill-ring)
-     ("C-x b"   . helm-mini)
-     ("C-c f r" . helm-recentf)
-     ("C-x C-f" . helm-find-files)))
+  (("M-x"     . helm-M-x)
+   ("M-y"     . helm-show-kill-ring)
+   ("C-x b"   . helm-mini)
+   ("C-c f r" . helm-recentf)
+   ("C-x C-f" . helm-find-files))
+  :init
+  (with-eval-after-load 'projectile
+    (setq projectile-completion-system 'helm)
+    (with-eval-after-load 'helm-projectile
+      (progn
+        (helm-projectile-on)
+        (setq helm-projectile-set-input-automatically nil)))))
 
 (use-package helm-mode
   :ensure nil ;; via `helm' package
@@ -497,13 +535,6 @@ successful (or unnecessary) and nil if not."
              ("<tab>" . helm-execute-persistent-action)
              ("C-i"   . helm-execute-persistent-action)
              ("C-z"   . helm-select-action)))
-
-(use-package helm-git-grep
-  :ensure t
-  :pin manual
-  :commands (helm-git-grep)
-  :after (helm-mode)
-  :bind ("C-c g f" . helm-git-grep))
 
 ;; Eyebrowse - Multiple window configurations
 (use-package eyebrowse
@@ -522,12 +553,34 @@ successful (or unnecessary) and nil if not."
     (define-key m (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
     (define-key m (kbd "M-9") 'eyebrowse-switch-to-window-config-9)))
 
-;; A better git-grep experience than the one built into helm
 ;; Whitespace butler - clean up whitespace
 (use-package ws-butler
   :ensure t
   :config
   (ws-butler-global-mode t))
+
+;; Dired .gitignore integration
+(use-package dired-gitignore
+  :pin manual
+  :load-path "vendor"
+  :config
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal dired-mode-map
+      (kbd "h") 'dired-gitignore-mode)))
+
+;; Interactive git grep
+(use-package helm-git-grep
+  :pin manual
+  :load-path "vendor"
+  :config
+  (with-eval-after-load 'helm
+    (global-set-key (kbd "C-c g f") 'helm-git-grep)))
+
+;; Semgrep module
+(use-package semgrep
+  :pin manual
+  :load-path "vendor")
+
 
 ;; Ido-vertical - vertical ido completion
 (use-package ido-vertical-mode
@@ -629,13 +682,38 @@ successful (or unnecessary) and nil if not."
    typescript-indent-level 2
    typescript-auto-indent-flag 0))
 
+(use-package prettier-js
+  :ensure t)
+
+;; (progn
+;;   (flycheck-remove-next-checker 'typescript-tide 'javascript-eslint)
+;;   (flycheck-remove-next-checker 'tsx-tide 'javascript-eslint))
+
+(require 'nodejs-repl)
+(add-hook 'js-mode-hook
+          (lambda ()
+            (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
+            (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
+            (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
+            (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-buffer)
+            (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
+            (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))
+
 ;; Typescript IDE
 (defun my/tide-hook ()
   "Custom Tide Hook."
   (tide-setup)
+  (tide-hl-identifier-mode t)
+  (prettier-js-mode t)
   (add-hook 'after-save-hook 'tide-format-before-save nil t)
+  ;; (flycheck-add-next-checker 'typescript-tide 'javascript-eslint 'append)
+  ;; (flycheck-add-next-checker 'tsx-tide 'javascript-eslint 'append)
   (with-eval-after-load 'evil
     (evil-define-key 'normal tide-mode-map
+      (kbd "C-c o") 'tide-organize-imports
+      (kbd "C-c r") 'tide-rename-symbol
+      (kbd "C-c l") 'tide-add-eslint-disable-next-line
+      (kbd "C-c TAB") 'tide-fix
       "gd" 'tide-jump-to-definition)))
 
 (use-package tide
@@ -814,7 +892,7 @@ successful (or unnecessary) and nil if not."
     ;; Prevent insertion of leading whitespace when hitting 'o' on a heading in
     ;; org-mode.
     ;; See: https://github.com/syl20bnr/spacemacs/issues/11204
-    (setq org-adapt-indentation nil)))
+    (setq org-adapt-indentation nil))
 
 ;; Evil support for org-mode
 (defun my/evil-org-mode-hook ()
@@ -862,12 +940,51 @@ Use this with 'eog' to get live reload."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   (quote
-    (kotlin-mode cmake-mode lsp-java use-package ace-window)))
+   '(sql-indent helm-rg irony-mode company-irony irony clang-format go-mode swiper prettier-js prettier-eslint undo-tree protobuf-mode kotlin-mode cmake-mode lsp-java use-package ace-window))
  '(safe-local-variable-values
-   (quote
-    ((web-mode-engines-alist
-      ("django" . "\\.html\\'"))))))
+   '((python-shell-process-environment "DJANGO_SETTINGS_MODULE=vho_shop.settings" "CODOH_SHOP_DEBUG=True" "CODOH_SHOP_NP_API_KEY=bogus" "CODOH_SHOP_NP_GATEWAY_URL=bogus" "CODOH_SHOP_SQUAREUP_APPLICATION_ID=bogus" "CODOH_SHOP_SQUAREUP_TOKEN=bogus" "CODOH_SHOP_SQUAREUP_LOCATION_ID=bogus" "CODOH_SHOP_SITE_URL=http://localhost:8000")
+     (python-shell-extra-pythonpaths "/home/felix/dev/codoh/shop.codoh.com")
+     (eval let
+	   ((root
+	     (projectile-project-root)))
+	   (setq-local company-clang-arguments
+		       (list
+			(concat "-I" root "src")
+			(concat "-I" root "include")
+			(concat "-I" root "build/host/debug")))
+	   (setq-local flycheck-clang-language-standard "c++11" flycheck-clang-include-path
+		       (list
+			(concat root "src")
+			(concat root "include")
+			(concat root "build/host/debug"))))
+     (eval let
+	   ((root
+	     (projectile-project-root)))
+	   (setq-local company-clang-arguments
+		       (list
+			(concat "-I" root "src")
+			(concat "-I" root "include")
+			(concat "-I" root "build/host")))
+	   (setq-local flycheck-clang-include-path
+		       (list
+			(concat root "src")
+			(concat root "include")
+			(concat root "build/host"))))
+     (eval let
+	   ((root
+	     (projectile-project-root)))
+	   (setq-local company-clang-arguments
+		       (list
+			(concat "-I" root "src")
+			(concat "-I" root "include")
+			(concat "-I" root "build/host")))
+	   (setq-local flycheck-clang-include-path
+		       (list
+			(concat "-I" root "src")
+			(concat "-I" root "include")
+			(concat "-I" root "build/host"))))
+     (web-mode-engines-alist
+      ("django" . "\\.html\\'")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
