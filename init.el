@@ -136,6 +136,21 @@ successful (or unnecessary) and nil if not."
 ;; dired-x provides `C-x C-j' to quickly open current buffer's directory
 (use-package dired-x :ensure nil)
 
+;; pass integration
+;; see: https://blog.drshapeless.com/post/7
+(use-package pass :ensure t
+  :config
+  (use-package pass)
+  (require 'epa-file)
+  (setq epg-pinentry-mode 'loopback)
+  (setq auth-sources '(password-store)))
+
+(use-package helm-pass
+  :ensure t
+  :after helm
+  :config
+  (global-set-key (kbd "C-x p") 'helm-pass))
+
 ;; -----------------------------------------------------------------------------
 ;; Shell Code
 ;; -----------------------------------------------------------------------------
@@ -201,12 +216,11 @@ successful (or unnecessary) and nil if not."
 ;; packages
 ;; -----------------------------------------------------------------------------
 
-(use-package clang-format
+(use-package undo-fu
   :ensure t)
 
-(use-package undo-tree
-  :config
-  (global-undo-tree-mode t))
+(use-package clang-format
+  :ensure t)
 
 ;; Fill column indicator to visually see the fill column
 ;; Note: Only enabled for Emacs < 27. Emacs 27+ sports built-in support for this
@@ -229,14 +243,6 @@ successful (or unnecessary) and nil if not."
     (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
     (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)))
 
-(use-package undo-fu
-  :ensure t
-  :after evil
-  :config
-  (global-undo-tree-mode -1)
-  (define-key evil-normal-state-map "u" 'undo-fu-only-undo)
-  (define-key evil-normal-state-map "\C-r" 'undo-fu-only-redo))
-
 ;; Tree-based directory browsing
 (use-package dired-subtree
   :ensure t
@@ -249,7 +255,8 @@ successful (or unnecessary) and nil if not."
   (setq evil-want-keybinding nil
         evil-respect-visual-line-mode t
         evil-want-C-i-jump t
-        evil-want-C-u-scroll t)
+        evil-want-C-u-scroll t
+        evil-undo-system 'undo-fu)
   :config
   (defun my/save-buffer ()
     "Save the buffer but don't muck up evil-repeat."
@@ -343,6 +350,7 @@ successful (or unnecessary) and nil if not."
   :custom
   (evil-collection-outline-bind-tab-p t "Bind <tab> in outline mode")
   :config
+  (with-eval-after-load 'pass (evil-collection-pass-setup))
   (with-eval-after-load 'calendar (evil-collection-calendar-setup))
   (with-eval-after-load 'dired (evil-collection-dired-setup))
   (with-eval-after-load 'term (evil-collection-term-setup))
@@ -559,14 +567,14 @@ successful (or unnecessary) and nil if not."
   :config
   (ws-butler-global-mode t))
 
-;; Dired .gitignore integration
-(use-package dired-gitignore
-  :pin manual
-  :load-path "vendor"
-  :config
-  (with-eval-after-load 'evil
-    (evil-define-key 'normal dired-mode-map
-      (kbd "h") 'dired-gitignore-mode)))
+;; ;; Dired .gitignore integration
+;; (use-package dired-gitignore
+;;   :pin manual
+;;   :load-path "vendor"
+;;   :config
+;;   (with-eval-after-load 'evil
+;;     (evil-define-key 'normal dired-mode-map
+;;       (kbd "h") 'dired-gitignore-mode)))
 
 ;; Interactive git grep
 (use-package helm-git-grep
@@ -576,10 +584,10 @@ successful (or unnecessary) and nil if not."
   (with-eval-after-load 'helm
     (global-set-key (kbd "C-c g f") 'helm-git-grep)))
 
-;; Semgrep module
-(use-package semgrep
-  :pin manual
-  :load-path "vendor")
+;; ;; Semgrep module
+;; (use-package semgrep
+;;   :pin manual
+;;   :load-path "vendor")
 
 
 ;; Ido-vertical - vertical ido completion
@@ -689,15 +697,15 @@ successful (or unnecessary) and nil if not."
 ;;   (flycheck-remove-next-checker 'typescript-tide 'javascript-eslint)
 ;;   (flycheck-remove-next-checker 'tsx-tide 'javascript-eslint))
 
-(require 'nodejs-repl)
-(add-hook 'js-mode-hook
-          (lambda ()
-            (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
-            (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
-            (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
-            (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-buffer)
-            (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
-            (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))
+;;(require 'nodejs-repl)
+;;(add-hook 'js-mode-hook
+;;          (lambda ()
+;;            (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
+;;            (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
+;;            (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
+;;            (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-buffer)
+;;            (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
+;;            (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))
 
 ;; Typescript IDE
 (defun my/tide-hook ()
@@ -718,7 +726,8 @@ successful (or unnecessary) and nil if not."
 
 (use-package tide
   :ensure t
-  :hook (typescript-mode . my/tide-hook))
+  :init
+  (add-hook 'typescript-mode-hook 'my/tide-hook))
 
 ;; Rust language support
 (use-package rust-mode
